@@ -1,0 +1,459 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import SectionLabel from '../components/ui/SectionLabel.astro';
+import Button from '../components/ui/Button.astro';
+import { WORK_GROUPS } from '../data/work';
+
+/**
+ * The portfolio page. Photos and client captions are REAL — pulled from
+ * the live kalpataruexhibition.com portfolio (user-approved source) and
+ * generated into src/data/work.ts. Sector blurbs in work.ts are our own
+ * copy (marked DUMMY there until the user approves the wording).
+ */
+
+const TONES = ['', 'tone-white', 'tone-tint'];
+
+const altFor = (client: string, category: string) =>
+	client === category
+		? `${category} exhibition stall built by Kalpataru`
+		: `Exhibition stall for ${client}, built by Kalpataru`;
+---
+
+<Layout
+	title="Work — Kalpataru Exhibition"
+	description="The Kalpataru Exhibition portfolio — real stalls built for engineering, real estate and jewellery brands."
+>
+	<PageHero
+		eyebrow="Our work"
+		lines={['Built to be', 'seen']}
+		subtitle="Every photo below is a real Kalpataru Exhibition stall, photographed at its show — across engineering, real estate and jewellery."
+		media="/images/work-hero.jpg"
+		mediaAlt="An exhibition stall for ESBEE Realty, built by Kalpataru"
+	/>
+
+	{
+		WORK_GROUPS.map((group, gi) => (
+			<section class:list={['section', 'gallery', TONES[gi]]}>
+				<div class="container">
+					<div class="gallery__head">
+						<div class="gallery__label" data-reveal>
+							<SectionLabel text={group.category} />
+						</div>
+						<div class="gallery__intro" data-reveal>
+							<h2 class="gallery__title">{group.category}</h2>
+							<p class="gallery__blurb">{group.blurb}</p>
+						</div>
+						<p class="gallery__count" data-reveal>
+							{group.items.length} builds
+						</p>
+					</div>
+
+					<ul class="gallery__grid">
+						{group.items.map((item) => (
+							<li data-reveal>
+								<button
+									class="gallery-item"
+									type="button"
+									data-gallery-item
+									data-src={item.src}
+									data-caption={item.client}
+								>
+									<img
+										src={item.src}
+										alt={altFor(item.client, group.category)}
+										loading="lazy"
+										decoding="async"
+										width="900"
+									/>
+									<span class="gallery-item__cap">{item.client}</span>
+								</button>
+							</li>
+						))}
+					</ul>
+				</div>
+			</section>
+		))
+	}
+
+	<section class="section gallery-cta theme-dark tone-accent">
+		<div class="container gallery-cta__inner">
+			<h2 class="gallery-cta__title" data-reveal>Have a show coming up?</h2>
+			<p class="gallery-cta__copy" data-reveal>
+				Send us the dates and the floor plan — we'll come back with a concept, a design
+				and a budget.
+			</p>
+			<div class="gallery-cta__actions" data-reveal>
+				<Button href="/contact" variant="solid">Start your project</Button>
+				<Button href="/#services" variant="ghost">What we do</Button>
+			</div>
+		</div>
+	</section>
+
+	<!-- Lightbox: opens any gallery tile full-size. Keyboard:
+	     Esc closes, ←/→ step, click on the backdrop closes. -->
+	<div class="lightbox" data-lightbox role="dialog" aria-modal="true" aria-label="Project photo">
+		<button class="lightbox__close" data-lightbox-close type="button" aria-label="Close">
+			<svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+				<path d="M3 3l10 10M13 3 3 13" stroke="currentColor" stroke-width="1.4"
+					stroke-linecap="round"></path>
+			</svg>
+		</button>
+		<button class="lightbox__nav lightbox__nav--prev" data-lightbox-prev type="button" aria-label="Previous photo">
+			<svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+				<path d="M10 2.5 4.5 8l5.5 5.5" stroke="currentColor" stroke-width="1.4"
+					stroke-linecap="round" stroke-linejoin="round"></path>
+			</svg>
+		</button>
+		<figure class="lightbox__stage">
+			<img data-lightbox-img src="" alt="" />
+			<figcaption class="lightbox__cap">
+				<span data-lightbox-client></span>
+				<span data-lightbox-count></span>
+			</figcaption>
+		</figure>
+		<button class="lightbox__nav lightbox__nav--next" data-lightbox-next type="button" aria-label="Next photo">
+			<svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+				<path d="m6 2.5 5.5 5.5L6 13.5" stroke="currentColor" stroke-width="1.4"
+					stroke-linecap="round" stroke-linejoin="round"></path>
+			</svg>
+		</button>
+	</div>
+</Layout>
+
+<style>
+	/* ------------------------------------------------------------ section head */
+	.gallery__head {
+		display: grid;
+		grid-template-columns: repeat(12, 1fr);
+		gap: 2rem;
+		align-items: end;
+		margin-bottom: clamp(2.2rem, 4.5vw, 3.5rem);
+	}
+
+	.gallery__label {
+		grid-column: 1 / 3;
+	}
+
+	.gallery__intro {
+		grid-column: 3 / 9;
+	}
+
+	.gallery__title {
+		font-size: clamp(2rem, 4.4vw, 3.4rem);
+		font-weight: 550;
+		letter-spacing: -0.02em;
+		line-height: 1.1;
+	}
+
+	.gallery__blurb {
+		margin-top: 1.1rem;
+		max-width: 52ch;
+		font-size: 0.92rem;
+		line-height: 1.7;
+		color: var(--ink-dim);
+	}
+
+	.gallery__count {
+		grid-column: 9 / 13;
+		justify-self: end;
+		font-size: 0.68rem;
+		font-weight: 600;
+		letter-spacing: 0.26em;
+		text-transform: uppercase;
+		color: var(--ink-faint);
+	}
+
+	/* ------------------------------------------------------------------ grid */
+	.gallery__grid {
+		list-style: none;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: clamp(0.9rem, 2vw, 1.5rem);
+	}
+
+	.gallery-item {
+		position: relative;
+		display: block;
+		width: 100%;
+		padding: 0;
+		border: 0;
+		background: none;
+		overflow: hidden;
+		cursor: zoom-in;
+	}
+
+	.gallery-item img {
+		display: block;
+		width: 100%;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+		transition: transform 0.7s var(--ease-swift);
+	}
+
+	.gallery-item:hover img,
+	.gallery-item:focus-visible img {
+		transform: scale(1.045);
+	}
+
+	.gallery-item:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+
+	.gallery-item__cap {
+		position: absolute;
+		inset: auto 0 0 0;
+		padding: 2.4rem 1.1rem 0.95rem;
+		/* strong tail so white captions stay readable even on bright photos
+		   (measured against all 81 tiles; see make-work-gallery.mjs) */
+		background: linear-gradient(
+			180deg,
+			rgba(14, 13, 12, 0) 0%,
+			rgba(14, 13, 12, 0.62) 55%,
+			rgba(14, 13, 12, 0.88) 100%
+		);
+		color: #f4efe6;
+		font-size: 0.9rem;
+		font-weight: 550;
+		line-height: 1.35;
+		text-align: left;
+		text-shadow: 0 1px 3px rgba(10, 9, 8, 0.5);
+		pointer-events: none;
+	}
+
+	/* ------------------------------------------------------------------ CTA */
+	.gallery-cta__inner {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1.4rem;
+		text-align: center;
+	}
+
+	.gallery-cta__title {
+		font-size: clamp(1.8rem, 3.6vw, 3rem);
+		font-weight: 550;
+		letter-spacing: -0.02em;
+	}
+
+	.gallery-cta__copy {
+		max-width: 46ch;
+		font-size: 0.95rem;
+		line-height: 1.7;
+		color: var(--ink-dim);
+	}
+
+	.gallery-cta__actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 1rem;
+		margin-top: 0.6rem;
+	}
+
+	/* -------------------------------------------------------------- lightbox */
+	.lightbox {
+		position: fixed;
+		inset: 0;
+		z-index: 1200;
+		display: none;
+		place-items: center;
+		padding: clamp(4.5rem, 8vw, 6.5rem) clamp(0.75rem, 4vw, 3.5rem) clamp(1rem, 4vw, 2.5rem);
+		background: rgba(12, 11, 10, 0.94);
+	}
+
+	.lightbox.is-open {
+		display: grid;
+	}
+
+	.lightbox__stage {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1rem;
+		max-width: min(92vw, 72rem);
+	}
+
+	.lightbox__stage img {
+		display: block;
+		max-width: 100%;
+		max-height: 74vh;
+		width: auto;
+		height: auto;
+		object-fit: contain;
+	}
+
+	.lightbox__cap {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: baseline;
+		gap: 0.6rem 1.2rem;
+		color: #f4efe6;
+		font-size: 0.9rem;
+		font-weight: 550;
+	}
+
+	.lightbox__cap [data-lightbox-count] {
+		font-size: 0.68rem;
+		font-weight: 600;
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+		color: rgba(244, 239, 230, 0.6);
+	}
+
+	.lightbox__close {
+		position: absolute;
+		top: clamp(0.9rem, 3vw, 1.8rem);
+		right: clamp(0.9rem, 3vw, 1.8rem);
+		display: grid;
+		place-items: center;
+		width: 2.75rem;
+		height: 2.75rem;
+		border: 1px solid rgba(244, 239, 230, 0.45);
+		background: transparent;
+		color: #f4efe6;
+		cursor: pointer;
+		transition: border-color 0.3s var(--ease-swift), background-color 0.3s var(--ease-swift);
+	}
+
+	.lightbox__close:hover {
+		border-color: #f4efe6;
+		background: rgba(244, 239, 230, 0.08);
+	}
+
+	.lightbox__close svg {
+		width: 1rem;
+		height: 1rem;
+	}
+
+	.lightbox__nav {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		display: grid;
+		place-items: center;
+		width: 2.9rem;
+		height: 2.9rem;
+		border: 1px solid rgba(244, 239, 230, 0.45);
+		background: transparent;
+		color: #f4efe6;
+		cursor: pointer;
+		transition: border-color 0.3s var(--ease-swift), background-color 0.3s var(--ease-swift);
+	}
+
+	.lightbox__nav:hover {
+		border-color: #f4efe6;
+		background: rgba(244, 239, 230, 0.08);
+	}
+
+	.lightbox__nav svg {
+		width: 1.05rem;
+		height: 1.05rem;
+	}
+
+	.lightbox__nav--prev {
+		left: clamp(0.5rem, 2.5vw, 2rem);
+	}
+
+	.lightbox__nav--next {
+		right: clamp(0.5rem, 2.5vw, 2rem);
+	}
+
+	/* ------------------------------------------------------------- responsive */
+	@media (max-width: 899px) {
+		.gallery__grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		.gallery__label,
+		.gallery__intro,
+		.gallery__count {
+			grid-column: 1 / -1;
+		}
+
+		.gallery__count {
+			justify-self: start;
+		}
+	}
+
+	@media (max-width: 599px) {
+		.gallery__grid {
+			grid-template-columns: 1fr;
+		}
+
+		.gallery-item img {
+			aspect-ratio: 16 / 10;
+		}
+
+		.lightbox {
+			padding-inline: 3.2rem;
+		}
+
+		.lightbox__nav {
+			width: 2.4rem;
+			height: 2.4rem;
+		}
+	}
+</style>
+
+<script>
+	// Lightbox for the portfolio gallery. Pure vanilla — every tile is a
+	// button with the photo path and client name in its data attributes.
+	const tiles = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-gallery-item]'));
+	const lightbox = document.querySelector<HTMLElement>('[data-lightbox]');
+	const lbImg = lightbox?.querySelector<HTMLImageElement>('[data-lightbox-img]');
+	const lbClient = lightbox?.querySelector<HTMLElement>('[data-lightbox-client]');
+	const lbCount = lightbox?.querySelector<HTMLElement>('[data-lightbox-count]');
+	const lbClose = lightbox?.querySelector<HTMLButtonElement>('[data-lightbox-close]');
+	const lbPrev = lightbox?.querySelector<HTMLButtonElement>('[data-lightbox-prev]');
+	const lbNext = lightbox?.querySelector<HTMLButtonElement>('[data-lightbox-next]');
+
+	if (lightbox && lbImg && lbClient && lbCount && tiles.length > 0) {
+		let index = 0;
+		let lastFocus: HTMLElement | null = null;
+
+		const render = () => {
+			const tile = tiles[index];
+			lbImg.src = tile.dataset.src ?? '';
+			lbImg.alt = tile.dataset.caption ?? '';
+			lbClient.textContent = tile.dataset.caption ?? '';
+			lbCount.textContent = `${index + 1} / ${tiles.length}`;
+		};
+
+		const open = (i: number) => {
+			index = (i + tiles.length) % tiles.length;
+			lastFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+			render();
+			lightbox.classList.add('is-open');
+			document.body.style.overflow = 'hidden';
+			lbClose?.focus();
+		};
+
+		const close = () => {
+			lightbox.classList.remove('is-open');
+			document.body.style.overflow = '';
+			lastFocus?.focus();
+		};
+
+		const step = (dir: number) => {
+			index = (index + dir + tiles.length) % tiles.length;
+			render();
+		};
+
+		tiles.forEach((tile, i) => tile.addEventListener('click', () => open(i)));
+		lbClose?.addEventListener('click', close);
+		lbPrev?.addEventListener('click', () => step(-1));
+		lbNext?.addEventListener('click', () => step(1));
+		lightbox.addEventListener('click', (event) => {
+			if (event.target === lightbox) close();
+		});
+		document.addEventListener('keydown', (event) => {
+			if (!lightbox.classList.contains('is-open')) return;
+			if (event.key === 'Escape') close();
+			if (event.key === 'ArrowLeft') step(-1);
+			if (event.key === 'ArrowRight') step(1);
+		});
+	}
+</script>

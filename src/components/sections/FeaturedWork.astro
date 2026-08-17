@@ -6,13 +6,16 @@ import SectionLabel from '../ui/SectionLabel.astro';
 /**
  * Photography is REAL — stall shots pulled from the live
  * kalpataruexhibition.com portfolio (user-provided).
- * Client names, exhibitions, locations and years are DUMMY placeholders —
- * replace with real project facts when provided.
+ * Client names are REAL — captions from the live portfolio page
+ * (work-1 = en-10, work-2 = je-6; work-3/work-4 are captioned
+ * generically on the live site, so their clients stay TBC).
+ * Exhibitions, locations and years are DUMMY placeholders — replace
+ * with real project facts when provided.
  */
 const PROJECTS = [
 	{
 		index: '01',
-		client: 'Client name — TBC',
+		client: 'HI-Tech polymers',
 		title: 'Engineering pavilion',
 		exhibition: 'Exhibition — TBC',
 		location: 'India',
@@ -22,7 +25,7 @@ const PROJECTS = [
 	},
 	{
 		index: '02',
-		client: 'Client name — TBC',
+		client: 'MAA Group',
 		title: 'Jewellery showcase',
 		exhibition: 'Exhibition — TBC',
 		location: 'India',
@@ -61,8 +64,7 @@ const PROJECTS = [
 				<h2 class="section-head__title">Built to be seen.</h2>
 			</div>
 			<div>
-				<!-- TODO — point to the real work page once it exists -->
-				<Button href="#" variant="ghost">View all work</Button>
+				<Button href="/work" variant="ghost">View all work</Button>
 			</div>
 		</div>
 
@@ -72,7 +74,7 @@ const PROJECTS = [
 					<article class:list={['work-item', i % 2 === 1 && 'work-item--flip']} data-reveal>
 						<a
 							class="work-item__media"
-							href="#"
+							href="/work"
 							aria-label={`${project.title} — ${project.client}, ${project.exhibition}`}
 						>
 							<PlaceholderImage

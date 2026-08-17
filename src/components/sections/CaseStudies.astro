@@ -6,12 +6,16 @@ import SectionLabel from '../ui/SectionLabel.astro';
 /**
  * Photography is REAL — stall shots pulled from the live
  * kalpataruexhibition.com portfolio (user-provided).
- * Titles, summaries and metadata are DUMMY placeholders — replace with
- * real, verified project stories when provided.
+ * Client names are REAL — captions from the live portfolio page
+ * (case-1 = en-7 APPL, case-2 = je-1 Nakoda Gold & Silver;
+ * case-3 = re-47 is captioned generically there, so its client stays TBC).
+ * Titles, summaries and the rest of the metadata are DUMMY placeholders —
+ * replace with real, verified project stories when provided.
  */
 const CASES = [
 	{
 		index: '01',
+		client: 'APPL',
 		title: 'An engineering pavilion',
 		summary:
 			'A modular pavilion with two meeting suites, a live demo zone and hidden storage — designed, fabricated and installed inside a six-week window.',
@@ -22,6 +26,7 @@ const CASES = [
 	},
 	{
 		index: '02',
+		client: 'Nakoda Gold & Silver',
 		title: 'A jewellery stand fit for a maharaja',
 		summary:
 			'Gilded arches, museum-grade display lighting and a private viewing lounge that turned a 72 sqm plot into the most photographed stand of the show.',
@@ -32,6 +37,7 @@ const CASES = [
 	},
 	{
 		index: '03',
+		client: 'Client name — TBC',
 		title: 'A real estate pavilion',
 		summary:
 			'A double-height pavilion with a model gallery, consultation lounge and hospitality counter that made a compact plot the busiest corner of the hall.',
@@ -78,6 +84,10 @@ const CASES = [
 							<h3 class="case__title">{c.title}</h3>
 							<p class="case__summary">{c.summary}</p>
 							<ul class="case__meta">
+								<li>
+									<span class="case__k">Client</span>
+									<span class="case__v">{c.client}</span>
+								</li>
 								<li>
 									<span class="case__k">Location</span>
 									<span class="case__v">{c.location}</span>
