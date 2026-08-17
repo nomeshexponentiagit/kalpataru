@@ -8,10 +8,38 @@ import Services from '../components/sections/Services.astro';
 import Industries from '../components/sections/Industries.astro';
 import GlobalPresence from '../components/sections/GlobalPresence.astro';
 import Process from '../components/sections/Process.astro';
-import CaseStudies from '../components/sections/CaseStudies.astro';
 import WhyKalpataru from '../components/sections/WhyKalpataru.astro';
 import Testimonials from '../components/sections/Testimonials.astro';
+import Faq from '../components/sections/Faq.astro';
 import FinalCta from '../components/sections/FinalCta.astro';
+
+// DUMMY — FAQ copy is placeholder until real, verified answers are approved.
+const FAQ_ITEMS = [
+	{
+		q: 'How much does an exhibition stall cost?',
+		a: 'It depends on the size, design and materials — a compact system stall costs far less than a large custom pavilion. Send us your floor plan and brief, and we will return a line-item budget together with the concept, so you see exactly what you are paying for.',
+	},
+	{
+		q: 'How far in advance should we book?',
+		a: 'As a rule of thumb, eight to ten weeks before the show gives us room for design, your revisions, fabrication and installation. We do accommodate shorter timelines — tell us your dates and we will be honest about what fits.',
+	},
+	{
+		q: 'Do you handle everything from design to installation?',
+		a: 'Yes. Turnkey is our default: concept, 3D design, fabrication, transport, installation, supervision at the venue and dismantling — one team and one point of contact throughout.',
+	},
+	{
+		q: 'Can you build for shows outside India?',
+		a: 'Yes — we provide international exhibition services, including export documentation, freight coordination and on-ground support, and we can reinstall your stand abroad.',
+	},
+	{
+		q: 'Do you work with small stalls too?',
+		a: 'We build everything from compact 3×3 m stands to full pavilions. The scale changes, the standard does not — the same design attention goes into every project.',
+	},
+	{
+		q: 'Will we see the design before it is built?',
+		a: 'Always. You receive photoreal 3D visualisations and walk through the stall virtually before a single panel is cut, with revision rounds until you approve.',
+	},
+];
 ---
 
 <Layout
@@ -20,14 +48,20 @@ import FinalCta from '../components/sections/FinalCta.astro';
 >
 	<Hero />
 	<Introduction />
-	<Stats />
 	<FeaturedWork />
 	<Services />
 	<Industries />
 	<GlobalPresence />
 	<Process />
-	<CaseStudies />
 	<WhyKalpataru />
+	<Stats />
 	<Testimonials />
+	<Faq
+		id="faq-home"
+		eyebrow="FAQ"
+		title="Questions, answered."
+		intro="The essentials — costs, timelines and how a stall actually gets built."
+		items={FAQ_ITEMS}
+	/>
 	<FinalCta />
 </Layout>

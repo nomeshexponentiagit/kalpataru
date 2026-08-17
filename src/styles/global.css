@@ -365,6 +365,22 @@ main > * + * {
 	flex: none;
 }
 
+/* masked headline lines, created by scripts/motion.ts for
+   .section-head__title and [data-headline]. The padding keeps descenders
+   from being clipped by the mask; the negative margin keeps the original
+   line rhythm. */
+.title-mask {
+	display: block;
+	overflow: hidden;
+	padding-block: 0.12em;
+	margin-block: -0.12em;
+}
+
+.title-mask__line {
+	display: block;
+	will-change: transform;
+}
+
 .skip-link {
 	position: fixed;
 	top: 0.75rem;

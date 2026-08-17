@@ -95,6 +95,90 @@ export function initMotion(reduceMotion: boolean): void {
 			}),
 	});
 
+	/* --------------------------------------------- masked headline reveals */
+	// Every .section-head__title is split into lines (at <br>) and each line
+	// rises out of an overflow-hidden mask as it scrolls into view. Big
+	// statements and CTA titles opt in with [data-headline].
+	const maskHeadline = (el: HTMLElement) => {
+		if (el.dataset.masked) return;
+		el.dataset.masked = 'true';
+
+		const lines: Node[][] = [[]];
+		Array.from(el.childNodes).forEach((node) => {
+			if (node.nodeName === 'BR') {
+				lines.push([]);
+				return;
+			}
+			lines[lines.length - 1].push(node);
+		});
+		const keep = lines.filter((line) =>
+			line.some(
+				(node) => node.nodeType !== Node.TEXT_NODE || (node.textContent ?? '').trim() !== ''
+			)
+		);
+		if (keep.length === 0) return;
+
+		el.textContent = '';
+		keep.forEach((line) => {
+			const mask = document.createElement('span');
+			mask.className = 'title-mask';
+			const inner = document.createElement('span');
+			inner.className = 'title-mask__line';
+			line.forEach((node) => inner.appendChild(node));
+			mask.appendChild(inner);
+			el.appendChild(mask);
+		});
+
+		gsap.from(el.querySelectorAll<HTMLElement>('.title-mask__line'), {
+			yPercent: 118,
+			duration: 1.05,
+			stagger: 0.09,
+			ease: 'power4.out',
+			scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+		});
+	};
+
+	document
+		.querySelectorAll<HTMLElement>('.section-head__title, [data-headline]')
+		.forEach(maskHeadline);
+
+	/* ----------------------------------------- section heads rise as a unit */
+	document.querySelectorAll<HTMLElement>('.section-head').forEach((head) => {
+		gsap.from(head.children, {
+			opacity: 0,
+			y: 24,
+			duration: 0.85,
+			ease: 'power3.out',
+			stagger: 0.08,
+			scrollTrigger: { trigger: head, start: 'top 88%', once: true },
+		});
+	});
+
+	/* ------------------------------------------------- image wipe reveals */
+	// [data-img-reveal] containers clip-reveal upward while the photo inside
+	// settles from a slight zoom. The image transform is cleared on
+	// completion so CSS hover states keep full control afterwards.
+	document.querySelectorAll<HTMLElement>('[data-img-reveal]').forEach((wrap) => {
+		const img = wrap.querySelector('img');
+		const tl = gsap.timeline({
+			scrollTrigger: { trigger: wrap, start: 'top 82%', once: true },
+		});
+		tl.fromTo(
+			wrap,
+			{ clipPath: 'inset(0 0 100% 0)' },
+			{ clipPath: 'inset(0 0 0% 0)', duration: 1.15, ease: 'power3.inOut' },
+			0
+		);
+		if (img) {
+			tl.fromTo(
+				img,
+				{ scale: 1.18 },
+				{ scale: 1, duration: 1.4, ease: 'power3.out', clearProps: 'transform' },
+				0
+			);
+		}
+	});
+
 	/* ------------------------------------------------- staggered service rows */
 	gsap.utils.toArray<HTMLElement>('.service-row').forEach((row, i) => {
 		gsap.from(row, {

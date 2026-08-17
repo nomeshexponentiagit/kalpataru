@@ -62,7 +62,7 @@ const CASES = [
 			{
 				CASES.map((c, i) => (
 					<article class:list={['case', i % 2 === 1 && 'case--flip']} data-reveal>
-						<div class="case__media">
+						<div class="case__media" data-img-reveal>
 							<PlaceholderImage
 								src={c.src}
 								alt={`${c.industry} exhibition stand — case study ${c.index}`}
