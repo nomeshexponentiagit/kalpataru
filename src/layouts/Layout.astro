@@ -35,12 +35,7 @@ const { title, description } = Astro.props;
 		<meta name="twitter:title" content={title} />
 		<meta name="twitter:description" content={description} />
 		<!-- TODO — add og:image / twitter:image once a real social preview image exists -->
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			rel="stylesheet"
-			href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,200..800;1,200..800&display=swap"
-		/>
+		<!-- fonts (Manrope + Inter) are self-hosted in public/fonts/ and declared in global.css -->
 		<script is:inline>
 			// gates JS-only styles/behaviour; motion never hides content when JS is off
 			document.documentElement.classList.add('js');
