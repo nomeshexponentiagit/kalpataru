@@ -1,0 +1,252 @@
+---
+import SectionLabel from '../ui/SectionLabel.astro';
+
+interface FaqItem {
+	q: string;
+	a: string;
+}
+
+interface Props {
+	eyebrow: string;
+	title: string;
+	intro?: string;
+	items: FaqItem[];
+	tone?: 'tone-white' | 'tone-tint';
+	/** prefix for the panel ids — unique per page so two lists never collide */
+	id?: string;
+}
+
+const { eyebrow, title, intro, items, tone, id = 'faq' } = Astro.props;
+---
+
+<section class:list={['section faq', tone]}>
+	<div class="container">
+		<div class="section-head">
+			<div>
+				<SectionLabel text={eyebrow} />
+				<h2 class="section-head__title">{title}</h2>
+			</div>
+			{intro && <p class="faq__intro">{intro}</p>}
+		</div>
+
+		<ul class="faq__list" data-faq-list data-reveal>
+			{
+				items.map((item, i) => (
+					<li class="faq__item">
+						<h3 class="faq__heading">
+							<button
+								class="faq__btn"
+								type="button"
+								data-faq-btn
+								aria-expanded="false"
+								aria-controls={`${id}-panel-${i}`}
+							>
+								<span class="faq__num" aria-hidden="true">
+									{String(i + 1).padStart(2, '0')}
+								</span>
+								<span class="faq__q">{item.q}</span>
+								<span class="faq__icon" aria-hidden="true">
+									<svg viewBox="0 0 16 16" fill="none">
+										<path
+											d="M8 2.5v11M2.5 8h11"
+											stroke="currentColor"
+											stroke-width="1.4"
+											stroke-linecap="round"></path>
+									</svg>
+								</span>
+							</button>
+						</h3>
+						<div class="faq__panel" id={`${id}-panel-${i}`} data-faq-panel aria-hidden="true">
+							<div class="faq__panel-inner">
+								<p class="faq__a">{item.a}</p>
+							</div>
+						</div>
+					</li>
+				))
+			}
+		</ul>
+
+		<p class="faq__more" data-reveal>
+			Still have questions? <a href="/contact">Talk to us</a>
+		</p>
+	</div>
+</section>
+
+<script>
+	// FAQ accordion — one panel open at a time. Panels animate through the
+	// CSS grid-rows trick, so the JS only flips classes and aria state.
+	const lists = document.querySelectorAll<HTMLElement>('[data-faq-list]');
+	lists.forEach((list) => {
+		const buttons = Array.from(list.querySelectorAll<HTMLButtonElement>('[data-faq-btn]'));
+		buttons.forEach((button) => {
+			button.addEventListener('click', () => {
+				const item = button.closest('.faq__item');
+				const panel = item?.querySelector<HTMLElement>('[data-faq-panel]');
+				const isOpen = button.getAttribute('aria-expanded') === 'true';
+
+				buttons.forEach((other) => {
+					other.setAttribute('aria-expanded', 'false');
+					const otherPanel = other
+						.closest('.faq__item')
+						?.querySelector<HTMLElement>('[data-faq-panel]');
+					otherPanel?.classList.remove('is-open');
+					otherPanel?.setAttribute('aria-hidden', 'true');
+				});
+
+				if (!isOpen) {
+					button.setAttribute('aria-expanded', 'true');
+					panel?.classList.add('is-open');
+					panel?.setAttribute('aria-hidden', 'false');
+				}
+			});
+		});
+	});
+</script>
+
+<style>
+	.faq__intro {
+		max-width: 32ch;
+		font-size: 0.86rem;
+		line-height: 1.7;
+		color: var(--ink-dim);
+	}
+
+	/* ------------------------------------------------------- accordion rows */
+	.faq__list {
+		border-top: 1px solid var(--line-strong);
+		list-style: none;
+	}
+
+	.faq__item {
+		border-bottom: 1px solid var(--line);
+	}
+
+	.faq__heading {
+		margin: 0;
+	}
+
+	.faq__btn {
+		display: grid;
+		grid-template-columns: 2.5rem 1fr auto;
+		align-items: center;
+		gap: clamp(1.25rem, 3vw, 2.5rem);
+		width: 100%;
+		padding-block: clamp(1.4rem, 2.6vw, 1.9rem);
+		text-align: left;
+		background: none;
+		border: 0;
+		cursor: pointer;
+		color: var(--ink);
+	}
+
+	.faq__btn:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 3px;
+	}
+
+	.faq__num {
+		font-size: 0.66rem;
+		font-weight: 600;
+		letter-spacing: 0.26em;
+		color: var(--ink-faint);
+		transition: color 0.35s var(--ease-swift);
+	}
+
+	.faq__q {
+		font-size: clamp(1.1rem, 1.8vw, 1.45rem);
+		font-weight: 550;
+		letter-spacing: -0.01em;
+		line-height: 1.3;
+		transition: color 0.35s var(--ease-swift);
+	}
+
+	.faq__icon {
+		display: grid;
+		place-items: center;
+		width: 2.4rem;
+		height: 2.4rem;
+		border: 1px solid var(--line-strong);
+		color: var(--ink-dim);
+		transition: transform 0.45s var(--ease-swift), background-color 0.35s var(--ease-swift),
+			border-color 0.35s var(--ease-swift), color 0.35s var(--ease-swift);
+	}
+
+	.faq__icon svg {
+		width: 0.95rem;
+		height: 0.95rem;
+	}
+
+	.faq__btn:hover .faq__q {
+		color: var(--accent-deep);
+	}
+
+	.faq__btn[aria-expanded='true'] .faq__icon {
+		transform: rotate(45deg);
+		background: var(--accent);
+		border-color: var(--accent);
+		color: var(--bg);
+	}
+
+	.faq__btn[aria-expanded='true'] .faq__num {
+		color: var(--accent);
+	}
+
+	/* ------------------------------------------------------------- panels */
+	.faq__panel {
+		display: grid;
+		grid-template-rows: 0fr;
+		transition: grid-template-rows 0.55s var(--ease-swift);
+	}
+
+	.faq__panel-inner {
+		overflow: hidden;
+	}
+
+	.faq__panel.is-open {
+		grid-template-rows: 1fr;
+	}
+
+	.faq__a {
+		max-width: 62ch;
+		margin-left: calc(2.5rem + clamp(1.25rem, 3vw, 2.5rem));
+		padding-bottom: clamp(1.5rem, 2.6vw, 2rem);
+		font-size: 0.92rem;
+		line-height: 1.75;
+		color: var(--ink-dim);
+	}
+
+	/* ------------------------------------------------------------ more link */
+	.faq__more {
+		margin-top: clamp(2.25rem, 4vw, 3rem);
+		font-size: 0.9rem;
+		color: var(--ink-dim);
+	}
+
+	.faq__more a {
+		font-weight: 600;
+		color: var(--accent-deep);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+		transition: color 0.3s var(--ease-swift);
+	}
+
+	.faq__more a:hover {
+		color: var(--accent);
+	}
+
+	/* ------------------------------------------------------------- responsive */
+	@media (max-width: 599px) {
+		.faq__btn {
+			grid-template-columns: 1fr auto;
+			gap: 1.25rem;
+		}
+
+		.faq__num {
+			display: none;
+		}
+
+		.faq__a {
+			margin-left: 0;
+		}
+	}
+</style>

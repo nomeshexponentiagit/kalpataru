@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import PageHero from '../components/ui/PageHero.astro';
 import Button from '../components/ui/Button.astro';
+import Faq from '../components/sections/Faq.astro';
 import { WORK_GROUPS } from '../data/work';
 
 /**
@@ -25,6 +26,31 @@ const altFor = (client: string, category: string) =>
 	client === category
 		? `${category} exhibition stall built by Kalpataru`
 		: `Exhibition stall for ${client}, built by Kalpataru`;
+
+// DUMMY — FAQ copy is placeholder until real, verified answers are approved
+// (the photos-and-captions answer in the first item is factual).
+const FAQ_ITEMS = [
+	{
+		q: 'Are the photos on this page real stalls?',
+		a: 'Yes — every photo is a real Kalpataru Exhibition stall, photographed at its show. The client names come from the shows themselves.',
+	},
+	{
+		q: 'Can you build a stall like the ones in the portfolio?',
+		a: 'Each stall is designed around its client\'s brand, so no two are identical — but any build here is a good reference for scale, finish and quality. Send us a link to the projects you like.',
+	},
+	{
+		q: 'Can we reuse one of these designs for our brand?',
+		a: 'We can adapt the structure and layout to your brand, budget and floor plan. You get a proven configuration with your own identity — not a copy of another client\'s stall.',
+	},
+	{
+		q: "What's the smallest stall you build?",
+		a: 'We build everything from compact 3×3 m shell-scheme builds to large multi-level pavilions. If your plot is small, we focus on making every square metre work hard.',
+	},
+	{
+		q: 'Do you build for our industry?',
+		a: 'We work across engineering, real estate and jewellery — and beyond. The principles of a high-performing stand travel; tell us about your industry and show.',
+	},
+];
 ---
 
 <Layout
@@ -91,7 +117,7 @@ const altFor = (client: string, category: string) =>
 								data-event={item.event}
 								data-date={item.date}
 							>
-								<span class="work-card__media">
+								<span class="work-card__media" data-img-reveal>
 									<img
 										src={item.src}
 										alt={altFor(item.client, item.category)}
@@ -114,9 +140,17 @@ const altFor = (client: string, category: string) =>
 		</div>
 	</section>
 
+	<Faq
+		id="faq-work"
+		eyebrow="FAQ"
+		title="Good to know."
+		intro="How our portfolio works — and what to expect when you build with us."
+		items={FAQ_ITEMS}
+	/>
+
 	<section class="section gallery-cta theme-dark tone-accent">
 		<div class="container gallery-cta__inner">
-			<h2 class="gallery-cta__title" data-reveal>Have a show coming up?</h2>
+			<h2 class="gallery-cta__title" data-headline>Have a show coming up?</h2>
 			<p class="gallery-cta__copy" data-reveal>
 				Send us the dates and the floor plan — we'll come back with a concept, a design
 				and a budget.

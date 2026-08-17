@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import PageHero from '../components/ui/PageHero.astro';
 import SectionLabel from '../components/ui/SectionLabel.astro';
 import Button from '../components/ui/Button.astro';
+import Faq from '../components/sections/Faq.astro';
 
 /**
  * Service titles come from the user's brief (same list as the homepage
@@ -55,6 +56,34 @@ const STEPS = [
 	{ num: '03', title: 'Build', desc: 'Fabrication, finishing and quality control — panels, carpentry, metalwork and lighting built to spec.' },
 	{ num: '04', title: 'Deliver', desc: 'Logistics, installation and handover at the venue, supervised by our own site team.' },
 	{ num: '05', title: 'Experience', desc: 'Your stand live, on show, on schedule — and a partner who debriefs with you after the hall closes.' },
+];
+
+// DUMMY — FAQ copy is placeholder until real, verified answers are approved.
+const FAQ_ITEMS = [
+	{
+		q: "What's the difference between stall design and stall fabrication?",
+		a: 'Design is the concept — layout, 3D visualisation, materials and lighting. Fabrication is the physical build — production, finishing and assembly. We offer both separately, and combined as a turnkey package.',
+	},
+	{
+		q: 'Can I commission only the 3D design?',
+		a: 'Yes. If you already have your own fabricator, we can deliver design and 3D visualisation only — including revision rounds and approval-ready views.',
+	},
+	{
+		q: 'Do you take turnkey projects?',
+		a: 'Turnkey is our most common engagement — design, fabrication, logistics, on-site installation and dismantling managed end to end, with one point of contact throughout.',
+	},
+	{
+		q: 'Can you work to our brand guidelines?',
+		a: 'Yes — brand colours, typography, tone and logo use are the starting point of every design. We translate your guidelines into a three-dimensional stand.',
+	},
+	{
+		q: 'What do you need from us to quote?',
+		a: 'The show name and dates, your floor plan or plot size, and your brand assets. A rough budget helps us propose the right approach — send what you have and we will fill in the gaps.',
+	},
+	{
+		q: 'What does your international service include?',
+		a: 'Export documentation, freight coordination, on-ground supervision and reinstallation abroad — execution support so your stand arrives and goes up the same way it does at home.',
+	},
 ];
 ---
 
@@ -137,9 +166,17 @@ const STEPS = [
 		</div>
 	</section>
 
+	<Faq
+		id="faq-services"
+		eyebrow="FAQ"
+		title="Before you brief us."
+		intro="Costs, timelines and how a stall actually gets built."
+		items={FAQ_ITEMS}
+	/>
+
 	<section class="section services-cta theme-dark tone-accent">
 		<div class="container services-cta__inner">
-			<h2 class="services-cta__title" data-reveal>Have a show coming up?</h2>
+			<h2 class="services-cta__title" data-headline>Have a show coming up?</h2>
 			<p class="services-cta__copy" data-reveal>
 				Send us the dates and the floor plan — we'll come back with a concept, a design
 				and a budget.
