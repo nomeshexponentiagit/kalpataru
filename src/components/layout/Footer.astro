@@ -7,13 +7,24 @@ const navHref = (href: string) => (isHome && href.startsWith('/#') ? href.slice(
 ---
 
 <!-- Dark footer — bookends the hero/CTA, uses the real logo as a light silhouette.
-     Contact details come from src/data/site.ts (still placeholder until verified). -->
+     The about blurb under the logo is DUMMY (replace with real approved text);
+     phone/email come from src/data/site.ts (still placeholder until verified). -->
 <footer class="footer theme-dark tone-ink">
 	<div class="container">
 		<div class="footer__top">
 			<div class="footer__brand" data-reveal>
 				<img class="footer__logo" src="/brand/logo.png" alt="Kalpataru Exhibition" width="324" height="81" />
 				<p class="footer__tagline">Exhibition design &amp; build</p>
+				<!-- DUMMY — short about copy; replace with real approved text before launch -->
+				<p class="footer__about">
+					Kalpataru Exhibition designs, fabricates and installs exhibition stalls
+					and pavilions across India and international markets — concept, build and
+					installation under one roof.
+				</p>
+				<ul class="footer__contact">
+					<li><a class="footer__link" href={`tel:${SITE.phone.replace(/\s/g, '')}`}>{SITE.phone}</a></li>
+					<li><a class="footer__link" href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+				</ul>
 			</div>
 
 			<div class="footer__cols">
@@ -33,14 +44,6 @@ const navHref = (href: string) => (isHome && href.startsWith('/#') ? href.slice(
 					<ul>
 						{CITIES.map((city) => <li>{city}</li>)}
 						{MARKETS.map((market) => <li>{market}</li>)}
-					</ul>
-				</div>
-
-				<div class="footer__col" data-reveal>
-					<p class="footer__head">Contact</p>
-					<ul>
-						<li><a class="footer__link" href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
-						<li><a class="footer__link" href={`tel:${SITE.phone.replace(/\s/g, '')}`}>{SITE.phone}</a></li>
 					</ul>
 				</div>
 
@@ -103,10 +106,35 @@ const navHref = (href: string) => (isHome && href.startsWith('/#') ? href.slice(
 		color: var(--ink-dim);
 	}
 
+	/* short about blurb under the logo — copy is DUMMY, see markup above */
+	.footer__about {
+		margin-top: 1.5rem;
+		max-width: 38ch;
+		font-size: 0.86rem;
+		line-height: 1.75;
+		color: var(--ink-dim);
+	}
+
+	.footer__contact {
+		margin-top: 1.3rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.55rem;
+		list-style: none;
+	}
+
+	.footer__contact a {
+		font-size: 0.86rem;
+		font-weight: 550;
+		letter-spacing: 0.04em;
+		color: var(--ink);
+		overflow-wrap: anywhere;
+	}
+
 	.footer__cols {
 		grid-column: 7 / 13;
 		display: grid;
-		grid-template-columns: repeat(4, 1fr);
+		grid-template-columns: repeat(3, 1fr);
 		gap: 2rem;
 	}
 
