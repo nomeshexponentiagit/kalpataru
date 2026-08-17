@@ -1,17 +1,33 @@
 ---
-
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/sections/Hero.astro';
+import Introduction from '../components/sections/Introduction.astro';
+import Stats from '../components/sections/Stats.astro';
+import FeaturedWork from '../components/sections/FeaturedWork.astro';
+import Services from '../components/sections/Services.astro';
+import Industries from '../components/sections/Industries.astro';
+import GlobalPresence from '../components/sections/GlobalPresence.astro';
+import Process from '../components/sections/Process.astro';
+import CaseStudies from '../components/sections/CaseStudies.astro';
+import WhyKalpataru from '../components/sections/WhyKalpataru.astro';
+import Testimonials from '../components/sections/Testimonials.astro';
+import FinalCta from '../components/sections/FinalCta.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout
+	title="Kalpataru Exhibition | Exhibition Design & Build"
+	description="Kalpataru Exhibition designs, fabricates and delivers exhibition stands and experiences for brands across India and international markets — from first concept to final installation."
+>
+	<Hero />
+	<Introduction />
+	<Stats />
+	<FeaturedWork />
+	<Services />
+	<Industries />
+	<GlobalPresence />
+	<Process />
+	<CaseStudies />
+	<WhyKalpataru />
+	<Testimonials />
+	<FinalCta />
+</Layout>

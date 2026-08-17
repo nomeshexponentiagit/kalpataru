@@ -1,0 +1,68 @@
+---
+/**
+ * DUMMY STATS — every value below is temporary and MUST be verified before
+ * launch. The counters animate automatically on scroll (see scripts/motion.ts).
+ */
+const STATS = [
+	{ value: '12', suffix: '+', label: 'Years' },
+	{ value: '850', suffix: '+', label: 'Projects' },
+	{ value: '320', suffix: '+', label: 'Clients' },
+	{ value: '4', suffix: '', label: 'Markets' },
+] as const;
+---
+
+<section class="section stats tone-white" aria-label="Company statistics">
+	<div class="container stats__grid">
+		{
+			STATS.map((stat) => (
+				<div class="stat" data-stat data-value={stat.value}>
+					<p class="stat__number">
+						<span data-stat-value>{stat.value}</span>
+						<span class="stat__suffix" aria-hidden="true">{stat.suffix}</span>
+					</p>
+					<p class="stat__label">{stat.label}</p>
+				</div>
+			))
+		}
+	</div>
+</section>
+
+<style>
+	.stats__grid {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: clamp(1.5rem, 4vw, 4rem);
+	}
+
+	.stat {
+		padding-top: 1.6rem;
+		border-top: 1px solid var(--line);
+	}
+
+	.stat__number {
+		font-size: clamp(2.6rem, 5.5vw, 4.8rem);
+		font-weight: 600;
+		letter-spacing: -0.03em;
+		line-height: 1;
+	}
+
+	.stat__suffix {
+		color: var(--accent);
+	}
+
+	.stat__label {
+		margin-top: 0.9rem;
+		font-size: 0.68rem;
+		font-weight: 600;
+		letter-spacing: 0.28em;
+		text-transform: uppercase;
+		color: var(--ink-dim);
+	}
+
+	@media (max-width: 767px) {
+		.stats__grid {
+			grid-template-columns: repeat(2, 1fr);
+			row-gap: 2.75rem;
+		}
+	}
+</style>

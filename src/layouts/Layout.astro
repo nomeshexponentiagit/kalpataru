@@ -1,0 +1,61 @@
+---
+import '../styles/global.css';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import { SITE } from '../data/site';
+
+interface Props {
+	title: string;
+	description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#f2f6f4" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" type="image/png" href="/brand/logo.png" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<!-- TODO — verify canonical/OG urls against the production domain once live -->
+		<link rel="canonical" href={`${SITE.url}/`} />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content={SITE.name} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={`${SITE.url}/`} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<!-- TODO — add og:image / twitter:image once a real social preview image exists -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,200..800;1,200..800&display=swap"
+		/>
+		<script is:inline>
+			// gates JS-only styles/behaviour; motion never hides content when JS is off
+			document.documentElement.classList.add('js');
+		</script>
+	</head>
+	<body>
+		<a class="skip-link" href="#main">Skip to content</a>
+		<div class="scroll-progress" data-scroll-progress aria-hidden="true"></div>
+		<Header />
+		<main id="main">
+			<slot />
+		</main>
+		<Footer />
+		<script>
+			import '../scripts/main';
+		</script>
+	</body>
+</html>

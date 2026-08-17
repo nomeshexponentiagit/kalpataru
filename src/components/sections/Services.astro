@@ -1,0 +1,206 @@
+---
+import PlaceholderImage from '../ui/PlaceholderImage.astro';
+import SectionLabel from '../ui/SectionLabel.astro';
+
+/**
+ * Service list and one-line descriptors from the brief.
+ * Preview visuals are DUMMY IMAGES — replace the files in public/images/.
+ */
+const SERVICES = [
+	{ num: '01', title: 'Exhibition Stall Design', desc: 'Concept, 3D and detail design for exhibition stalls.', src: '/images/service-1.jpg' },
+	{ num: '02', title: 'Exhibition Stand Design', desc: 'Bespoke stand design, from layout to visual identity.', src: '/images/service-2.jpg' },
+	{ num: '03', title: '3D Stall Design', desc: 'Photoreal 3D visualisation for review and approval.', src: '/images/service-3.jpg' },
+	{ num: '04', title: 'Exhibition Stall Fabrication', desc: 'Quality-controlled production and finishing.', src: '/images/service-4.jpg' },
+	{ num: '05', title: 'Turnkey Exhibition Solutions', desc: 'Design to installation, managed end to end.', src: '/images/service-5.jpg' },
+	{ num: '06', title: 'International Exhibition Services', desc: 'Execution support across international markets.', src: '/images/service-6.jpg' },
+];
+---
+
+<section class="section services" id="services">
+	<div class="container">
+		<div class="section-head">
+			<div>
+				<SectionLabel text="What we do" />
+				<h2 class="section-head__title">
+					From first sketch<br />to final installation.
+				</h2>
+			</div>
+		</div>
+
+		<div class="services__layout">
+			<ul class="services__list" data-services-list>
+				{
+					SERVICES.map((service) => (
+						<li>
+							<a class="service-row" href="#contact" data-service>
+								<span class="service-row__num">{service.num}</span>
+								<span class="service-row__text">
+									<span class="service-row__title">{service.title}</span>
+									<span class="service-row__desc">{service.desc}</span>
+								</span>
+								<span class="service-row__arrow" aria-hidden="true">
+									<svg viewBox="0 0 16 16" fill="none">
+										<path
+											d="M2 8h11M9 3.5 13.5 8 9 12.5"
+											stroke="currentColor"
+											stroke-width="1.4"
+											stroke-linecap="round"
+											stroke-linejoin="round"></path>
+									</svg>
+								</span>
+							</a>
+						</li>
+					))
+				}
+			</ul>
+
+			<!-- desktop-only preview panel; reveals the related visual on hover (see scripts/main.ts) -->
+			<div class="services__preview" data-services-preview aria-hidden="true">
+				<div class="services__preview-box">
+					{
+						SERVICES.map((service, i) => (
+							<div class:list={['services__preview-item', i === 0 && 'is-active']} data-service-preview={i}>
+								<PlaceholderImage
+									src={service.src}
+									alt=""
+									aspect="3 / 4"
+									tone="light"
+									decorative
+								/>
+							</div>
+						))
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.services__layout {
+		display: grid;
+		grid-template-columns: repeat(12, 1fr);
+		gap: clamp(2rem, 5vw, 5rem);
+	}
+
+	.services__list {
+		grid-column: 1 / 8;
+	}
+
+	.service-row {
+		display: grid;
+		grid-template-columns: 3.25rem 1fr auto;
+		align-items: center;
+		gap: 1.25rem;
+		padding-block: 1.7rem;
+		border-top: 1px solid var(--line);
+	}
+
+	.services__list li:last-child .service-row {
+		border-bottom: 1px solid var(--line);
+	}
+
+	.service-row__num {
+		font-size: 0.66rem;
+		font-weight: 600;
+		letter-spacing: 0.26em;
+		color: var(--ink-faint);
+		transition: color 0.35s var(--ease-swift);
+	}
+
+	.service-row__text {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+	}
+
+	.service-row__title {
+		font-size: clamp(1.35rem, 2vw, 1.9rem);
+		font-weight: 550;
+		letter-spacing: -0.01em;
+		text-transform: uppercase;
+		transition: transform 0.5s var(--ease-swift), color 0.35s var(--ease-swift);
+	}
+
+	.service-row__desc {
+		font-size: 0.84rem;
+		color: var(--ink-faint);
+		transition: color 0.35s var(--ease-swift);
+	}
+
+	.service-row__arrow {
+		color: var(--ink-faint);
+		opacity: 0;
+		transform: translateX(-0.5rem);
+		transition: opacity 0.4s var(--ease-swift), transform 0.4s var(--ease-swift);
+	}
+
+	.service-row__arrow svg {
+		width: 1.15rem;
+		height: 1.15rem;
+	}
+
+	.service-row:hover .service-row__title,
+	.service-row.is-active .service-row__title,
+	.service-row:focus-visible .service-row__title {
+		transform: translateX(0.9rem);
+	}
+
+	.service-row:hover .service-row__num,
+	.service-row.is-active .service-row__num,
+	.service-row:focus-visible .service-row__num {
+		color: var(--accent);
+	}
+
+	.service-row:hover .service-row__desc,
+	.service-row.is-active .service-row__desc {
+		color: var(--ink-dim);
+	}
+
+	.service-row:hover .service-row__arrow,
+	.service-row.is-active .service-row__arrow,
+	.service-row:focus-visible .service-row__arrow {
+		opacity: 1;
+		transform: none;
+	}
+
+	/* --------------------------------------------- sticky preview panel */
+
+	.services__preview {
+		grid-column: 9 / 13;
+	}
+
+	.services__preview-box {
+		position: sticky;
+		top: calc(var(--header-h) + 2rem);
+		aspect-ratio: 3 / 4;
+	}
+
+	.services__preview-item {
+		position: absolute;
+		inset: 0;
+		opacity: 0;
+		transform: scale(1.035);
+		transition: opacity 0.55s var(--ease-swift), transform 0.55s var(--ease-swift);
+	}
+
+	.services__preview-item.is-active {
+		opacity: 1;
+		transform: none;
+	}
+
+	@media (max-width: 1023px) {
+		.services__preview {
+			display: none;
+		}
+
+		/* children span the full row here, so collapse the 12-track system */
+		.services__layout {
+			grid-template-columns: 1fr;
+		}
+
+		.services__list {
+			grid-column: 1 / -1;
+		}
+	}
+</style>

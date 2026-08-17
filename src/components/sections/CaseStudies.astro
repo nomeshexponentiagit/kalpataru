@@ -1,0 +1,246 @@
+---
+import Button from '../ui/Button.astro';
+import PlaceholderImage from '../ui/PlaceholderImage.astro';
+import SectionLabel from '../ui/SectionLabel.astro';
+
+/**
+ * Photography is REAL — stall shots pulled from the live
+ * kalpataruexhibition.com portfolio (user-provided).
+ * Titles, summaries and metadata are DUMMY placeholders — replace with
+ * real, verified project stories when provided.
+ */
+const CASES = [
+	{
+		index: '01',
+		title: 'An engineering pavilion',
+		summary:
+			'A modular pavilion with two meeting suites, a live demo zone and hidden storage — designed, fabricated and installed inside a six-week window.',
+		location: 'India',
+		industry: 'Engineering',
+		year: '—',
+		src: '/images/case-1.jpg',
+	},
+	{
+		index: '02',
+		title: 'A jewellery stand fit for a maharaja',
+		summary:
+			'Gilded arches, museum-grade display lighting and a private viewing lounge that turned a 72 sqm plot into the most photographed stand of the show.',
+		location: 'India',
+		industry: 'Jewellery',
+		year: '—',
+		src: '/images/case-2.jpg',
+	},
+	{
+		index: '03',
+		title: 'A real estate pavilion',
+		summary:
+			'A double-height pavilion with a model gallery, consultation lounge and hospitality counter that made a compact plot the busiest corner of the hall.',
+		location: 'India',
+		industry: 'Real estate',
+		year: '—',
+		src: '/images/case-3.jpg',
+	},
+];
+---
+
+<section class="section cases tone-white">
+	<div class="container">
+		<div class="section-head">
+			<div>
+				<SectionLabel text="Case studies" />
+				<h2 class="section-head__title">The idea is only the beginning.</h2>
+			</div>
+		</div>
+
+		<div class="cases__list">
+			{
+				CASES.map((c, i) => (
+					<article class:list={['case', i % 2 === 1 && 'case--flip']} data-reveal>
+						<div class="case__media">
+							<PlaceholderImage
+								src={c.src}
+								alt={`${c.industry} exhibition stand — case study ${c.index}`}
+								aspect="16 / 10"
+								tone="light"
+							/>
+						</div>
+						<div class="case__body">
+							<div class="case__flow" aria-label="Case study journey">
+								<span>Challenge</span>
+								<i aria-hidden="true">→</i>
+								<span>Concept</span>
+								<i aria-hidden="true">→</i>
+								<span>Design</span>
+								<i aria-hidden="true">→</i>
+								<span>Execution</span>
+							</div>
+							<p class="case__index">{c.index}</p>
+							<h3 class="case__title">{c.title}</h3>
+							<p class="case__summary">{c.summary}</p>
+							<ul class="case__meta">
+								<li>
+									<span class="case__k">Location</span>
+									<span class="case__v">{c.location}</span>
+								</li>
+								<li>
+									<span class="case__k">Industry</span>
+									<span class="case__v">{c.industry}</span>
+								</li>
+								<li>
+									<span class="case__k">Year</span>
+									<span class="case__v">{c.year}</span>
+								</li>
+							</ul>
+						</div>
+					</article>
+				))
+			}
+		</div>
+
+		<div class="cases__cta">
+			<!-- TODO — point to the real case studies page once it exists -->
+			<Button href="#" variant="ghost">Explore case studies</Button>
+		</div>
+	</div>
+</section>
+
+<style>
+	.cases__list {
+		display: flex;
+		flex-direction: column;
+		gap: clamp(3.5rem, 7vw, 6.5rem);
+	}
+
+	.case {
+		display: grid;
+		grid-template-columns: repeat(12, 1fr);
+		gap: 2rem;
+		align-items: end;
+	}
+
+	.case__media {
+		grid-column: 1 / 8;
+		overflow: hidden;
+	}
+
+	.case--flip .case__media {
+		grid-column: 6 / 13;
+		grid-row: 1;
+	}
+
+	.case:hover :global(.ph__img),
+	.case:hover :global(.ph__svg) {
+		transform: scale(1.04);
+	}
+
+	.case__body {
+		grid-column: 9 / 13;
+	}
+
+	.case--flip .case__body {
+		grid-column: 1 / 5;
+		grid-row: 1;
+	}
+
+	.case__flow {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.65rem;
+		font-size: 0.62rem;
+		font-weight: 600;
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+		color: var(--ink-faint);
+	}
+
+	.case__flow i {
+		color: var(--accent);
+		font-style: normal;
+	}
+
+	.case__index {
+		margin-top: 1.1rem;
+		font-size: 0.66rem;
+		font-weight: 600;
+		letter-spacing: 0.28em;
+		color: var(--accent);
+	}
+
+	.case__title {
+		margin-top: 0.7rem;
+		font-size: clamp(1.4rem, 2.2vw, 2rem);
+		text-transform: uppercase;
+	}
+
+	.case__summary {
+		margin-top: 0.9rem;
+		font-size: 0.88rem;
+		line-height: 1.7;
+		color: var(--ink-dim);
+	}
+
+	.case__meta {
+		margin-top: 1.2rem;
+	}
+
+	.case__meta li {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		padding-block: 0.55rem;
+		border-bottom: 1px solid var(--line);
+	}
+
+	.case__k {
+		font-size: 0.62rem;
+		font-weight: 600;
+		letter-spacing: 0.26em;
+		text-transform: uppercase;
+		color: var(--ink-faint);
+	}
+
+	.case__v {
+		font-size: 0.84rem;
+		color: var(--ink-dim);
+	}
+
+	.cases__cta {
+		margin-top: clamp(3rem, 6vw, 4.5rem);
+		text-align: center;
+	}
+
+	@media (max-width: 1023px) {
+		.case__media {
+			grid-column: 1 / 9;
+		}
+
+		.case--flip .case__media {
+			grid-column: 5 / 13;
+		}
+
+		.case__body {
+			grid-column: 9 / 13;
+		}
+
+		.case--flip .case__body {
+			grid-column: 1 / 5;
+		}
+	}
+
+	@media (max-width: 767px) {
+		/* 12 track + gap system can't fit below ~390px; stack fully */
+		.case {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+
+		.case__media,
+		.case--flip .case__media,
+		.case__body,
+		.case--flip .case__body {
+			grid-column: 1 / -1;
+			grid-row: auto;
+		}
+	}
+</style>

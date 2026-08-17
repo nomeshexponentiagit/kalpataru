@@ -1,0 +1,284 @@
+---
+import Button from '../ui/Button.astro';
+import PlaceholderImage from '../ui/PlaceholderImage.astro';
+---
+
+<section class="hero theme-dark" id="top">
+	<div class="hero__media" data-hero-media>
+		<!-- Real stall photo (work-3, from the user's kalpataruexhibition.com portfolio) animated
+		     into a seamless 12s Ken Burns loop: slow zoom/pan + teal light sweep + vignette.
+		     /images/hero.jpg is the poster/first frame; the looping mp4 fades in over it once it
+		     can play. Regenerate from /tmp/kalpataru-verify/render-video-photo.html. -->
+		<PlaceholderImage
+			src="/images/hero.jpg"
+			alt="A Kalpataru exhibition stall, lit and built, in a trade-show hall"
+			aspect="auto"
+			loading="eager"
+			decoding="sync"
+		/>
+		<video
+			class="hero__video"
+			autoplay
+			muted
+			loop
+			playsinline
+			preload="auto"
+			aria-hidden="true"
+			tabindex="-1"
+		>
+			<source src="/videos/hero.mp4" type="video/mp4" />
+		</video>
+	</div>
+	<div class="hero__scrim" aria-hidden="true"></div>
+
+	<div class="container hero__inner">
+		<p class="eyebrow" data-hero-eyebrow>Exhibition design &amp; build</p>
+
+		<h1 class="hero__title">
+			<span class="hero__line-mask"><span class="hero__line" data-hero-line>We build experiences</span></span>
+			<span class="hero__line-mask"><span class="hero__line" data-hero-line>that make brands</span></span>
+			<span class="hero__line-mask"
+				><span class="hero__line" data-hero-line>impossible to ignore<span class="hero__period">.</span></span></span
+			>
+		</h1>
+
+		<div class="hero__foot">
+			<p class="hero__copy" data-hero-copy>
+				Exhibition design, fabrication and turnkey execution for brands across India and international
+				markets.
+			</p>
+
+			<div class="hero__actions">
+				<p class="hero__markets" data-hero-markets>India · Japan · China · USA</p>
+				<div class="hero__ctas" data-hero-ctas>
+					<Button href="#contact" variant="solid">Start your project</Button>
+					<Button href="#work" variant="ghost">Explore our work</Button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<a class="hero__scroll" href="#about" aria-label="Scroll to next section">
+		<span class="hero__scroll-track" aria-hidden="true"><span class="hero__scroll-dot"></span></span>
+		<span class="hero__scroll-text">Scroll</span>
+	</a>
+</section>
+
+<style>
+	.hero {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		min-height: 100svh;
+		overflow: hidden;
+		/* dark backstop behind the parallaxing media */
+		background: #10252b;
+	}
+
+	.hero__media {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+	}
+
+	/* placeholder box fills the viewport (aspect-ratio is auto here) */
+	.hero__media :global(.ph) {
+		height: 100%;
+	}
+
+	/* looping stall video — sits over the poster image and fades in when
+	   it can play; the poster stays visible if the video can't run */
+	.hero__video {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		opacity: 0;
+		transition: opacity 1.4s var(--ease-swift);
+	}
+
+	.hero__video.is-playing {
+		opacity: 1;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.hero__video {
+			display: none;
+		}
+	}
+
+	.hero__scrim {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		/* left-darkened so the title/copy stay readable over the video's lit wall,
+		   and a light edge-darkening on the right for the counter area */
+		background:
+			linear-gradient(
+				90deg,
+				rgba(14, 13, 12, 0.62) 0%,
+				rgba(14, 13, 12, 0.36) 45%,
+				rgba(14, 13, 12, 0.12) 60%,
+				rgba(14, 13, 12, 0.25) 100%
+			),
+			linear-gradient(
+				180deg,
+				rgba(14, 13, 12, 0.7) 0%,
+				rgba(14, 13, 12, 0.34) 45%,
+				rgba(14, 13, 12, 0.8) 100%
+			);
+	}
+
+	.hero__inner {
+		position: relative;
+		z-index: 2;
+		padding-block: calc(var(--header-h) + 3rem) 7.5rem;
+	}
+
+	.hero__title {
+		margin-top: 1.4rem;
+		/* sized down per user feedback — still large, but not viewport-filling */
+		font-size: clamp(2rem, 7vw, 5.5rem);
+		font-weight: 600;
+		letter-spacing: -0.03em;
+		line-height: 0.96;
+		text-transform: uppercase;
+	}
+
+	/* masks for the line entrance animation */
+	.hero__line-mask {
+		display: block;
+		overflow: hidden;
+	}
+
+	.hero__line {
+		display: block;
+		padding-bottom: 0.06em;
+		will-change: transform;
+	}
+
+	.hero__period {
+		color: var(--accent);
+	}
+
+	.hero__foot {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 2rem;
+		margin-top: clamp(2rem, 4vw, 3.5rem);
+	}
+
+	.hero__copy {
+		max-width: 36ch;
+		font-size: clamp(0.95rem, 1.1vw, 1.1rem);
+		line-height: 1.65;
+		color: var(--ink-dim);
+	}
+
+	.hero__actions {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1.4rem;
+	}
+
+	.hero__markets {
+		font-size: 0.68rem;
+		font-weight: 600;
+		letter-spacing: 0.3em;
+		text-transform: uppercase;
+		color: var(--ink-faint);
+	}
+
+	.hero__ctas {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.85rem;
+	}
+
+	/* inside theme-dark the solid button turns white — the global
+	   .theme-dark .btn--solid rule keeps its text ink-dark */
+
+	/* ---------------------------------------------------- scroll indicator */
+
+	.hero__scroll {
+		position: absolute;
+		left: 50%;
+		bottom: 1.6rem;
+		z-index: 3;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.9rem;
+		transform: translateX(-50%);
+		color: var(--ink-faint);
+		transition: color 0.3s var(--ease-swift);
+	}
+
+	.hero__scroll:hover {
+		color: var(--ink);
+	}
+
+	.hero__scroll-track {
+		position: relative;
+		width: 1px;
+		height: 3rem;
+		background: var(--line-strong);
+		overflow: hidden;
+	}
+
+	.hero__scroll-dot {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 1px;
+		height: 0.9rem;
+		background: var(--accent);
+		animation: hero-scroll-dot 2.2s var(--ease-swift) infinite;
+	}
+
+	@keyframes hero-scroll-dot {
+		0% {
+			transform: translateY(-100%);
+		}
+		60%,
+		100% {
+			transform: translateY(3.4rem);
+		}
+	}
+
+	.hero__scroll-text {
+		font-size: 0.6rem;
+		font-weight: 600;
+		letter-spacing: 0.32em;
+		text-transform: uppercase;
+	}
+
+	/* ------------------------------------------------------- responsive */
+
+	@media (max-width: 767px) {
+		.hero__scroll {
+			display: none;
+		}
+
+		.hero__inner {
+			padding-bottom: 3rem;
+		}
+	}
+</style>
+
+<script>
+	// Fade the looping stall video in once it is actually playing;
+	// reduced-motion visitors keep the static poster instead.
+	const video = document.querySelector<HTMLVideoElement>('.hero__video');
+	if (video && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		const show = () => video.classList.add('is-playing');
+		const play = () => video.play().then(show).catch(() => {});
+		if (video.readyState >= 3) play();
+		else video.addEventListener('canplay', play, { once: true });
+	}
+</script>

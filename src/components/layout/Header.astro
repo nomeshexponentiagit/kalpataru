@@ -1,0 +1,289 @@
+---
+import fs from 'node:fs';
+import Button from '../ui/Button.astro';
+import { NAV_LINKS } from '../../data/site';
+
+/* Logo auto-detect: drop a file named logo (svg/png/webp/jpg) into
+   public/brand/ and it appears here automatically. */
+const LOGO_DIR = new URL('../../../public/brand/', import.meta.url);
+const logoFile = ['logo.svg', 'logo.png', 'logo.webp', 'logo.jpg'].find((f) =>
+	fs.existsSync(new URL(f, LOGO_DIR))
+);
+---
+
+<header class="site-header" data-header>
+	<div class="container site-header__row">
+		<a class="site-header__brand" href="#top">
+			{
+				logoFile ? (
+					<img
+						class="site-header__logo"
+						src={`/brand/${logoFile}`}
+						alt="Kalpataru Exhibition"
+						width="200"
+						height="48"
+					/>
+				) : (
+					<>KALPATARU<span class="site-header__dot">.</span></>
+				)
+			}
+		</a>
+
+		<nav class="site-header__nav" aria-label="Primary">
+			<ul class="site-header__list">
+				{
+					NAV_LINKS.map(({ label, href }) => (
+						<li>
+							<a class="site-header__link" href={href}>{label}</a>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
+
+		<div class="site-header__cta">
+			<Button href="#contact" variant="solid" size="sm">Start a project</Button>
+		</div>
+
+		<button
+			class="site-header__burger"
+			type="button"
+			data-menu-toggle
+			aria-expanded="false"
+			aria-controls="site-menu"
+			aria-label="Open menu"
+		>
+			<span></span>
+			<span></span>
+		</button>
+	</div>
+
+	<div class="site-menu" id="site-menu" data-menu>
+		<nav class="site-menu__nav" aria-label="Menu">
+			<ul>
+				{
+					NAV_LINKS.map(({ label, href }, i) => (
+						<li style={`--i:${i}`}>
+							<a class="site-menu__link" href={href}>{label}</a>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
+		<div class="site-menu__foot">
+			<Button href="#contact" variant="solid">Start a project</Button>
+			<p class="site-menu__markets">India · Japan · China · USA</p>
+		</div>
+	</div>
+</header>
+
+<style>
+	.site-header {
+		position: fixed;
+		inset-inline: 0;
+		top: 0;
+		z-index: 60;
+		/* over the hero photo: light ink on a transparent bar */
+		--ink: #eff6f5;
+		--ink-dim: rgba(239, 246, 245, 0.72);
+		--ink-faint: rgba(239, 246, 245, 0.5);
+		color: var(--ink);
+		transition: background-color 0.4s var(--ease-swift), border-color 0.4s var(--ease-swift);
+		border-bottom: 1px solid transparent;
+	}
+
+	/* solid paper appearance once the page is scrolled (toggled by scripts/main.ts) */
+	.site-header.is-scrolled {
+		--ink: #10252b;
+		--ink-dim: rgba(16, 37, 43, 0.68);
+		--ink-faint: rgba(16, 37, 43, 0.45);
+		background: rgba(242, 246, 244, 0.92);
+		-webkit-backdrop-filter: blur(14px);
+		backdrop-filter: blur(14px);
+		border-bottom-color: var(--line);
+	}
+
+	/* while the light fullscreen menu is open, switch the bar's ink to dark
+	   (class toggled by scripts/main.ts) */
+	.site-header.is-open {
+		--ink: #10252b;
+		--ink-dim: rgba(16, 37, 43, 0.68);
+		--ink-faint: rgba(16, 37, 43, 0.45);
+	}
+
+	.site-header__row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 2rem;
+		height: var(--header-h);
+	}
+
+	.site-header__brand {
+		font-size: 1.05rem;
+		font-weight: 650;
+		letter-spacing: 0.32em;
+	}
+
+	.site-header__logo {
+		height: 2.1rem;
+		width: auto;
+		transition: filter 0.4s var(--ease-swift);
+	}
+
+	/* the logo is deep teal — render it as a white silhouette while the bar
+	   sits over the dark hero photo; full colour on paper (scrolled / menu open) */
+	.site-header:not(.is-scrolled):not(.is-open) .site-header__logo {
+		filter: brightness(0) invert(1);
+	}
+
+	/* same situation for the solid CTA: over the hero it is a white pill,
+	   so its text must be ink-dark (scrolled/menu states use the default) */
+	.site-header:not(.is-scrolled):not(.is-open) :global(.btn--solid),
+	.site-header:not(.is-scrolled):not(.is-open) :global(.btn--solid):hover {
+		color: #10252b;
+	}
+
+	.site-header__dot {
+		color: var(--accent);
+	}
+
+	.site-header__list {
+		display: flex;
+		gap: clamp(1.25rem, 2.5vw, 2.25rem);
+	}
+
+	.site-header__link {
+		position: relative;
+		font-size: 0.7rem;
+		font-weight: 600;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: var(--ink-dim);
+		transition: color 0.3s var(--ease-swift);
+	}
+
+	.site-header__link::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		bottom: -0.45rem;
+		width: 100%;
+		height: 1px;
+		background: var(--accent);
+		transform: scaleX(0);
+		transform-origin: right;
+		transition: transform 0.4s var(--ease-swift);
+	}
+
+	.site-header__link:hover,
+	.site-header__link:focus-visible {
+		color: var(--ink);
+	}
+
+	.site-header__link:hover::after,
+	.site-header__link:focus-visible::after {
+		transform: scaleX(1);
+		transform-origin: left;
+	}
+
+	/* ------------------------------------------------ burger (mobile only) */
+
+	.site-header__burger {
+		display: none;
+		flex-direction: column;
+		gap: 0.42rem;
+		padding: 0.5rem;
+		margin-inline: -0.5rem;
+	}
+
+	.site-header__burger span {
+		display: block;
+		width: 1.5rem;
+		height: 1.5px;
+		background: var(--ink);
+		transition: transform 0.35s var(--ease-swift);
+	}
+
+	.site-header__burger[aria-expanded='true'] span:first-child {
+		transform: translateY(3.5px) rotate(45deg);
+	}
+
+	.site-header__burger[aria-expanded='true'] span:last-child {
+		transform: translateY(-3.5px) rotate(-45deg);
+	}
+
+	/* ------------------------------------------------ fullscreen menu */
+
+	.site-menu {
+		position: fixed;
+		inset: 0;
+		z-index: 50;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		padding: calc(var(--header-h) + 2.5rem) var(--gutter) 2.5rem;
+		background: var(--bg);
+		visibility: hidden;
+		opacity: 0;
+		transition: opacity 0.45s var(--ease-swift), visibility 0s linear 0.45s;
+	}
+
+	.site-menu.is-open {
+		visibility: visible;
+		opacity: 1;
+		transition: opacity 0.45s var(--ease-swift);
+	}
+
+	.site-menu__link {
+		display: block;
+		padding-block: 0.35rem;
+		font-size: clamp(2rem, 8vw, 3.25rem);
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: -0.01em;
+		line-height: 1.25;
+		opacity: 0;
+		transform: translateY(18px);
+		transition: opacity 0.5s var(--ease-swift), transform 0.5s var(--ease-swift),
+			color 0.3s var(--ease-swift);
+		transition-delay: calc(var(--i) * 55ms);
+	}
+
+	.site-menu.is-open .site-menu__link {
+		opacity: 1;
+		transform: none;
+	}
+
+	.site-menu__link:hover {
+		color: var(--accent);
+	}
+
+	.site-menu__foot {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 1.5rem;
+	}
+
+	.site-menu__markets {
+		font-size: 0.68rem;
+		font-weight: 600;
+		letter-spacing: 0.24em;
+		text-transform: uppercase;
+		color: var(--ink-faint);
+	}
+
+	/* ------------------------------------------------------- responsive */
+
+	@media (max-width: 899px) {
+		.site-header__nav,
+		.site-header__cta {
+			display: none;
+		}
+
+		.site-header__burger {
+			display: flex;
+		}
+	}
+</style>

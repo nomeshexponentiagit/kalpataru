@@ -1,0 +1,193 @@
+---
+/**
+ * PLACEHOLDER IMAGE SYSTEM
+ * ------------------------
+ * Current images are DUMMY stock photos (public/images/) used until real
+ * Kalpataru photography is provided. Pass `src` to render a real <img>
+ * with width/height/loading/decoding applied; without `src` the component
+ * falls back to a neutral abstract exhibition-stand motif as inline SVG.
+ * To replace a dummy image, overwrite the file in public/images/ — or
+ * update the `src` path and delete the fallback entirely.
+ */
+interface Props {
+	/** Real image source. Once provided, the neutral motif is replaced by an <img>. */
+	src?: string;
+	/** Accessible description. Required unless `decorative` is set. */
+	alt?: string;
+	/** CSS aspect-ratio, e.g. '16 / 9' (also affects the placeholder box). */
+	aspect?: string;
+	/** Small caption shown inside the placeholder motif. */
+	label?: string;
+	/** Composition variant for the placeholder motif (0-3). */
+	variant?: number;
+	loading?: 'lazy' | 'eager';
+	decoding?: 'async' | 'sync';
+	width?: number;
+	height?: number;
+	/** 'dark' (default) or 'light' — matches the section background. */
+	tone?: 'dark' | 'light';
+	/** Presentational only: hidden from assistive tech. */
+	decorative?: boolean;
+	class?: string;
+}
+
+const {
+	src,
+	alt = '',
+	aspect = '16 / 10',
+	label,
+	variant = 0,
+	loading = 'lazy',
+	decoding = 'async',
+	width,
+	height,
+	tone = 'dark',
+	decorative = false,
+	class: className,
+} = Astro.props;
+
+const v = ((Math.round(variant) % 4) + 4) % 4;
+---
+
+<div
+	class:list={['ph', `ph--${tone}`, className]}
+	style={`aspect-ratio:${aspect}`}
+	role={decorative || src ? undefined : 'img'}
+	aria-label={decorative ? undefined : alt || undefined}
+	aria-hidden={decorative ? 'true' : undefined}
+>
+	{
+		src ? (
+			<img
+				class="ph-img"
+				src={src}
+				alt={alt}
+				loading={loading}
+				decoding={decoding}
+				width={width}
+				height={height}
+			/>
+		) : (
+			<svg class="ph__svg" viewBox="0 0 800 560" preserveAspectRatio="xMidYMid slice" focusable="false" aria-hidden="true">
+				{v === 0 && (
+					<g>
+						<line class="ph__shape" x1="0" y1="470" x2="800" y2="470" />
+						<rect class="ph__fill" x="70" y="180" width="660" height="290" />
+						<rect class="ph__shape" x="40" y="140" width="720" height="30" />
+						<rect class="ph__fill" x="140" y="380" width="210" height="90" />
+						<rect class="ph__fill" x="440" y="400" width="250" height="70" />
+						<line class="ph__accent" x1="370" y1="140" x2="370" y2="470" />
+						<circle class="ph__accent-fill" cx="370" cy="140" r="4" />
+					</g>
+				)}
+				{v === 1 && (
+					<g>
+						<line class="ph__shape" x1="0" y1="470" x2="800" y2="470" />
+						<rect class="ph__fill" x="90" y="210" width="320" height="260" />
+						<rect class="ph__fill" x="430" y="150" width="280" height="320" />
+						<rect class="ph__shape" x="60" y="120" width="700" height="26" />
+						<rect class="ph__fill" x="120" y="400" width="180" height="70" />
+						<line class="ph__accent" x1="410" y1="120" x2="410" y2="470" />
+						<circle class="ph__accent-fill" cx="410" cy="120" r="4" />
+					</g>
+				)}
+				{v === 2 && (
+					<g>
+						<line class="ph__shape" x1="0" y1="470" x2="800" y2="470" />
+						<rect class="ph__fill" x="60" y="250" width="190" height="220" />
+						<rect class="ph__fill" x="310" y="180" width="190" height="290" />
+						<rect class="ph__fill" x="560" y="230" width="190" height="240" />
+						<line class="ph__shape" x1="0" y1="140" x2="800" y2="140" />
+						<line class="ph__accent" x1="310" y1="140" x2="310" y2="470" />
+						<circle class="ph__accent-fill" cx="310" cy="140" r="4" />
+					</g>
+				)}
+				{v === 3 && (
+					<g>
+						<line class="ph__shape" x1="0" y1="470" x2="800" y2="470" />
+						<line class="ph__shape" x1="90" y1="300" x2="260" y2="470" />
+						<line class="ph__shape" x1="260" y1="470" x2="430" y2="300" />
+						<line class="ph__shape" x1="430" y1="300" x2="600" y2="470" />
+						<line class="ph__shape" x1="600" y1="470" x2="770" y2="300" />
+						<line class="ph__shape" x1="60" y1="220" x2="740" y2="220" />
+						<rect class="ph__fill" x="330" y="380" width="200" height="90" />
+						<line class="ph__accent" x1="430" y1="220" x2="430" y2="300" />
+						<circle class="ph__accent-fill" cx="430" cy="220" r="4" />
+					</g>
+				)}
+			</svg>
+		)
+	}
+	{label && !src && <span class="ph__label" aria-hidden="true">{label}</span>}
+</div>
+
+<style>
+	.ph {
+		position: relative;
+		overflow: hidden;
+		background: var(--ph-bg);
+	}
+
+	.ph--dark {
+		--ph-bg: #10252b;
+		--ph-line: rgba(239, 246, 245, 0.16);
+		--ph-soft: rgba(239, 246, 245, 0.045);
+		--ph-label: rgba(239, 246, 245, 0.45);
+		--ph-accent: rgba(95, 203, 209, 0.55);
+	}
+
+	.ph--light {
+		--ph-bg: #dfe8e6;
+		--ph-line: rgba(16, 37, 43, 0.2);
+		--ph-soft: rgba(16, 37, 43, 0.045);
+		--ph-label: rgba(16, 37, 43, 0.45);
+		--ph-accent: rgba(10, 127, 134, 0.55);
+	}
+
+	.ph__svg {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		transition: transform 0.9s var(--ease-swift);
+	}
+
+	.ph__shape {
+		fill: none;
+		stroke: var(--ph-line);
+		stroke-width: 1.5;
+	}
+
+	.ph__fill {
+		fill: var(--ph-soft);
+		stroke: var(--ph-line);
+		stroke-width: 1.5;
+	}
+
+	.ph__accent {
+		stroke: var(--ph-accent);
+		stroke-width: 1.5;
+	}
+
+	.ph__accent-fill {
+		fill: var(--ph-accent);
+	}
+
+	.ph__label {
+		position: absolute;
+		left: 1.1rem;
+		bottom: 1rem;
+		font-size: 0.6rem;
+		font-weight: 600;
+		letter-spacing: 0.26em;
+		text-transform: uppercase;
+		color: var(--ph-label);
+	}
+
+	.ph-img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.9s var(--ease-swift);
+	}
+</style>

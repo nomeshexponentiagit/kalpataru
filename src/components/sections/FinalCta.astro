@@ -1,0 +1,96 @@
+---
+import Button from '../ui/Button.astro';
+import PlaceholderImage from '../ui/PlaceholderImage.astro';
+---
+
+<section class="cta theme-dark" id="contact">
+	<!-- REAL stall photo from the live kalpataruexhibition.com portfolio (user-provided) -->
+	<div class="cta__media" aria-hidden="true">
+		<PlaceholderImage src="/images/cta.jpg" alt="" aspect="auto" decorative />
+	</div>
+	<div class="cta__scrim" aria-hidden="true"></div>
+
+	<div class="container cta__inner">
+		<h2 class="cta__title" data-reveal>
+			Let's build your<br />next big impression<span class="cta__period">.</span>
+		</h2>
+		<p class="cta__copy" data-reveal>
+			Tell us about your next exhibition and let's create something worth remembering.
+		</p>
+		<div class="cta__actions" data-reveal>
+			<!-- TODO — link to the contact page / enquiry form once built -->
+			<Button href="#" variant="solid">Start your project</Button>
+			<Button href="#work" variant="ghost">View our work</Button>
+		</div>
+	</div>
+</section>
+
+<style>
+	.cta {
+		position: relative;
+		display: grid;
+		place-items: center;
+		min-height: 85vh;
+		padding-block: var(--section-y);
+		text-align: center;
+		overflow: hidden;
+		/* dark backstop behind the parallaxing media */
+		background: #10252b;
+	}
+
+	.cta__media {
+		position: absolute;
+		inset: 0;
+	}
+
+	.cta__media :global(.ph) {
+		height: 100%;
+	}
+
+	.cta__scrim {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(180deg, rgba(14, 13, 12, 0.55) 0%, rgba(14, 13, 12, 0.8) 100%);
+	}
+
+	.cta__inner {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1.6rem;
+	}
+
+	.cta__title {
+		font-size: clamp(2.4rem, 6vw, 5.5rem);
+		font-weight: 600;
+		letter-spacing: -0.03em;
+		line-height: 1;
+		text-transform: uppercase;
+	}
+
+	.cta__period {
+		color: var(--accent);
+	}
+
+	.cta__copy {
+		max-width: 44ch;
+		font-size: clamp(0.95rem, 1.15vw, 1.1rem);
+		line-height: 1.65;
+		color: var(--ink-dim);
+	}
+
+	.cta__actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.85rem;
+		margin-top: 0.6rem;
+	}
+
+	/* inside theme-dark the solid button turns white — keep its text ink-dark */
+	.cta :global(.btn--solid) {
+		color: #10252b;
+	}
+</style>

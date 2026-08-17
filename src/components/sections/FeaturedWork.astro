@@ -1,0 +1,293 @@
+---
+import Button from '../ui/Button.astro';
+import PlaceholderImage from '../ui/PlaceholderImage.astro';
+import SectionLabel from '../ui/SectionLabel.astro';
+
+/**
+ * Photography is REAL — stall shots pulled from the live
+ * kalpataruexhibition.com portfolio (user-provided).
+ * Client names, exhibitions, locations and years are DUMMY placeholders —
+ * replace with real project facts when provided.
+ */
+const PROJECTS = [
+	{
+		index: '01',
+		client: 'Client name — TBC',
+		title: 'Engineering pavilion',
+		exhibition: 'Exhibition — TBC',
+		location: 'India',
+		industry: 'Engineering',
+		year: '—',
+		src: '/images/work-1.jpg',
+	},
+	{
+		index: '02',
+		client: 'Client name — TBC',
+		title: 'Jewellery showcase',
+		exhibition: 'Exhibition — TBC',
+		location: 'India',
+		industry: 'Jewellery',
+		year: '—',
+		src: '/images/work-2.jpg',
+	},
+	{
+		index: '03',
+		client: 'Client name — TBC',
+		title: 'Real estate pavilion',
+		exhibition: 'Exhibition — TBC',
+		location: 'India',
+		industry: 'Real estate',
+		year: '—',
+		src: '/images/work-3.jpg',
+	},
+	{
+		index: '04',
+		client: 'Client name — TBC',
+		title: 'Real estate showcase',
+		exhibition: 'Exhibition — TBC',
+		location: 'India',
+		industry: 'Real estate',
+		year: '—',
+		src: '/images/work-4.jpg',
+	},
+];
+---
+
+<section class="section work theme-dark tone-ink" id="work">
+	<div class="container">
+		<div class="section-head">
+			<div>
+				<SectionLabel text="Selected work" />
+				<h2 class="section-head__title">Built to be seen.</h2>
+			</div>
+			<div>
+				<!-- TODO — point to the real work page once it exists -->
+				<Button href="#" variant="ghost">View all work</Button>
+			</div>
+		</div>
+
+		<div class="work__list">
+			{
+				PROJECTS.map((project, i) => (
+					<article class:list={['work-item', i % 2 === 1 && 'work-item--flip']} data-reveal>
+						<a
+							class="work-item__media"
+							href="#"
+							aria-label={`${project.title} — ${project.client}, ${project.exhibition}`}
+						>
+							<PlaceholderImage
+								src={project.src}
+								alt={`${project.industry} exhibition stall built by Kalpataru`}
+								aspect="16 / 10"
+								tone="light"
+							/>
+							<span class="work-item__arrow" aria-hidden="true">
+								<svg viewBox="0 0 16 16" fill="none">
+									<path
+										d="M2 8h11M9 3.5 13.5 8 9 12.5"
+										stroke="currentColor"
+										stroke-width="1.4"
+										stroke-linecap="round"
+										stroke-linejoin="round"></path>
+								</svg>
+							</span>
+						</a>
+
+						<div class="work-item__body">
+							<p class="work-item__index">{project.index}</p>
+							<h3 class="work-item__title">{project.title}</h3>
+							<ul class="work-item__meta">
+								<li>
+									<span class="work-item__k">Client</span>
+									<span class="work-item__v">{project.client}</span>
+								</li>
+								<li>
+									<span class="work-item__k">Exhibition</span>
+									<span class="work-item__v">{project.exhibition}</span>
+								</li>
+								<li>
+									<span class="work-item__k">Location</span>
+									<span class="work-item__v">{project.location}</span>
+								</li>
+								<li>
+									<span class="work-item__k">Industry</span>
+									<span class="work-item__v">{project.industry}</span>
+								</li>
+								<li>
+									<span class="work-item__k">Year</span>
+									<span class="work-item__v">{project.year}</span>
+								</li>
+							</ul>
+						</div>
+					</article>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.work__list {
+		display: flex;
+		flex-direction: column;
+		gap: clamp(3.5rem, 7vw, 6.5rem);
+	}
+
+	.work-item {
+		display: grid;
+		grid-template-columns: repeat(12, 1fr);
+		gap: 2rem;
+		align-items: end;
+	}
+
+	.work-item__media {
+		position: relative;
+		display: block;
+		grid-column: 1 / 8;
+		overflow: hidden;
+	}
+
+	.work-item--flip .work-item__media {
+		grid-column: 6 / 13;
+		grid-row: 1;
+	}
+
+	/* subtle hover interactions */
+	.work-item__media::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: rgba(14, 13, 12, 0.32);
+		opacity: 0;
+		transition: opacity 0.5s var(--ease-swift);
+		pointer-events: none;
+	}
+
+	.work-item__media:hover :global(.ph__img),
+	.work-item__media:hover :global(.ph__svg),
+	.work-item__media:focus-visible :global(.ph__img),
+	.work-item__media:focus-visible :global(.ph__svg) {
+		transform: scale(1.045);
+	}
+
+	.work-item__media:hover::after {
+		opacity: 1;
+	}
+
+	.work-item__arrow {
+		position: absolute;
+		right: 1.25rem;
+		bottom: 1.25rem;
+		display: grid;
+		place-items: center;
+		width: 3rem;
+		height: 3rem;
+		border: 1px solid rgba(244, 241, 234, 0.5);
+		/* always sits on the photo, so keep it light regardless of theme */
+		color: #f4f1ea;
+		opacity: 0;
+		transform: translateY(0.6rem);
+		transition: opacity 0.4s var(--ease-swift), transform 0.4s var(--ease-swift);
+	}
+
+	.work-item__arrow svg {
+		width: 1rem;
+		height: 1rem;
+	}
+
+	.work-item__media:hover .work-item__arrow,
+	.work-item__media:focus-visible .work-item__arrow {
+		opacity: 1;
+		transform: none;
+	}
+
+	/* ------------------------------------------------ meta column */
+
+	.work-item__body {
+		grid-column: 9 / 13;
+		align-self: end;
+	}
+
+	.work-item--flip .work-item__body {
+		grid-column: 1 / 5;
+		grid-row: 1;
+	}
+
+	.work-item__index {
+		font-size: 0.66rem;
+		font-weight: 600;
+		letter-spacing: 0.28em;
+		color: var(--accent);
+	}
+
+	.work-item__title {
+		margin-top: 0.8rem;
+		font-size: clamp(1.5rem, 2.5vw, 2.3rem);
+		text-transform: uppercase;
+		transition: transform 0.5s var(--ease-swift);
+	}
+
+	.work-item__media:hover ~ .work-item__body .work-item__title,
+	.work-item:hover .work-item__title {
+		transform: translateX(0.5rem);
+	}
+
+	.work-item__meta {
+		margin-top: 1.4rem;
+	}
+
+	.work-item__meta li {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		padding-block: 0.62rem;
+		border-bottom: 1px solid var(--line);
+	}
+
+	.work-item__k {
+		font-size: 0.62rem;
+		font-weight: 600;
+		letter-spacing: 0.26em;
+		text-transform: uppercase;
+		color: var(--ink-faint);
+	}
+
+	.work-item__v {
+		font-size: 0.86rem;
+		color: var(--ink-dim);
+	}
+
+	@media (max-width: 1023px) {
+		.work-item__media {
+			grid-column: 1 / 9;
+		}
+
+		.work-item--flip .work-item__media {
+			grid-column: 5 / 13;
+		}
+
+		.work-item__body {
+			grid-column: 9 / 13;
+		}
+
+		.work-item--flip .work-item__body {
+			grid-column: 1 / 5;
+		}
+	}
+
+	@media (max-width: 767px) {
+		/* 12 track + gap system can't fit below ~390px; stack fully */
+		.work-item {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+
+		.work-item__media,
+		.work-item--flip .work-item__media,
+		.work-item__body,
+		.work-item--flip .work-item__body {
+			grid-column: 1 / -1;
+			grid-row: auto;
+		}
+	}
+</style>

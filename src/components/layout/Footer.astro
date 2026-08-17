@@ -1,0 +1,161 @@
+---
+import { CITIES, FOOTER_NAV, MARKETS, SITE, SOCIALS } from '../../data/site';
+---
+
+<!-- Dark footer — bookends the hero/CTA, uses the real logo as a light silhouette.
+     Contact details come from src/data/site.ts (still placeholder until verified). -->
+<footer class="footer theme-dark tone-ink">
+	<div class="container">
+		<div class="footer__top">
+			<div class="footer__brand" data-reveal>
+				<img class="footer__logo" src="/brand/logo.png" alt="Kalpataru Exhibition" width="324" height="81" />
+				<p class="footer__tagline">Exhibition design &amp; build</p>
+			</div>
+
+			<div class="footer__cols">
+				<nav class="footer__col" data-reveal aria-label="Footer navigation">
+					<p class="footer__head">Navigation</p>
+					<ul>
+						{
+							FOOTER_NAV.map(({ label, href }) => (
+								<li><a class="footer__link" href={href}>{label}</a></li>
+							))
+						}
+					</ul>
+				</nav>
+
+				<div class="footer__col" data-reveal>
+					<p class="footer__head">Markets</p>
+					<ul>
+						{CITIES.map((city) => <li>{city}</li>)}
+						{MARKETS.map((market) => <li>{market}</li>)}
+					</ul>
+				</div>
+
+				<div class="footer__col" data-reveal>
+					<p class="footer__head">Contact</p>
+					<ul>
+						<li><a class="footer__link" href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+						<li><a class="footer__link" href={`tel:${SITE.phone.replace(/\s/g, '')}`}>{SITE.phone}</a></li>
+					</ul>
+				</div>
+
+				<div class="footer__col" data-reveal>
+					<p class="footer__head">Social</p>
+					<ul>
+						{
+							SOCIALS.map(({ label, href }) => (
+								<li><a class="footer__link" href={href}>{label}</a></li>
+							))
+						}
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="footer__bottom">
+			<p>© {new Date().getFullYear()} {SITE.name}</p>
+			<a class="footer__top-link" href="#top">Back to top ↑</a>
+		</div>
+	</div>
+</footer>
+
+<style>
+	.footer {
+		padding-block: clamp(4rem, 8vw, 7rem) 2rem;
+	}
+
+	.footer__top {
+		display: grid;
+		grid-template-columns: repeat(12, 1fr);
+		gap: clamp(2.5rem, 5vw, 4rem);
+		padding-bottom: clamp(3rem, 6vw, 5rem);
+	}
+
+	.footer__brand {
+		grid-column: 1 / 6;
+	}
+
+	/* real logo as a light silhouette on the dark footer */
+	.footer__logo {
+		height: 2.6rem;
+		width: auto;
+		filter: brightness(0) invert(1);
+	}
+
+	.footer__tagline {
+		margin-top: 1.4rem;
+		font-size: 0.72rem;
+		font-weight: 600;
+		letter-spacing: 0.24em;
+		text-transform: uppercase;
+		color: var(--ink-dim);
+	}
+
+	.footer__cols {
+		grid-column: 7 / 13;
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 2rem;
+	}
+
+	.footer__head {
+		margin-bottom: 1.1rem;
+		font-size: 0.66rem;
+		font-weight: 600;
+		letter-spacing: 0.26em;
+		text-transform: uppercase;
+		color: var(--accent);
+	}
+
+	.footer__col li {
+		font-size: 0.82rem;
+		line-height: 2.1;
+		color: var(--ink-dim);
+	}
+
+	.footer__link {
+		transition: color 0.3s var(--ease-swift);
+	}
+
+	.footer__link:hover {
+		color: var(--accent);
+	}
+
+	.footer__bottom {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding-top: 1.75rem;
+		border-top: 1px solid var(--line);
+		font-size: 0.72rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--ink-faint);
+	}
+
+	.footer__top-link {
+		transition: color 0.3s var(--ease-swift);
+	}
+
+	.footer__top-link:hover {
+		color: var(--accent);
+	}
+
+	@media (max-width: 767px) {
+		.footer__top {
+			grid-template-columns: 1fr;
+			gap: 2.5rem;
+		}
+
+		.footer__brand,
+		.footer__cols {
+			grid-column: 1 / -1;
+		}
+
+		.footer__cols {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+</style>
