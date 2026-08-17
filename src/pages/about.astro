@@ -49,11 +49,59 @@ import WhyKalpataru from '../components/sections/WhyKalpataru.astro';
 					src="/images/about-story.jpg"
 					alt="A Kalpataru exhibition stand with large-format wall graphics"
 					loading="lazy"
-					data-img-reveal
 				/>
 				<!-- DUMMY caption — replace with a real project reference -->
 				<figcaption>Wall graphics and structure, installed on site — recent international show</figcaption>
 			</figure>
+		</div>
+	</section>
+
+	<section class="section leadership tone-tint" aria-label="Leadership team">
+		<div class="container">
+			<div data-reveal>
+				<SectionLabel text="Leadership" />
+			</div>
+			<h2 class="leadership__heading" data-headline>
+				The people behind the build<span class="leadership__period">.</span>
+			</h2>
+			<!-- DUMMY team — names, designations, bios and the silhouette photos are
+			     placeholders; replace with real people and swap the photos in
+			     public/images/ (team-founder.svg / team-director.svg / team-creative.svg) -->
+			<div class="leadership__grid">
+				<article class="leader" data-reveal>
+					<img
+						class="leader__photo"
+						src="/images/team-founder.svg"
+						alt="Portrait placeholder — Founder"
+						loading="lazy"
+					/>
+					<h3 class="leader__name">Arjun Deshmukh</h3>
+					<p class="leader__role">Founder &amp; Managing Director</p>
+					<p class="leader__bio">Founded Kalpataru to bring studio-level design to the exhibition floor.</p>
+				</article>
+				<article class="leader" data-reveal>
+					<img
+						class="leader__photo"
+						src="/images/team-director.svg"
+						alt="Portrait placeholder — Director"
+						loading="lazy"
+					/>
+					<h3 class="leader__name">Neha Kulkarni</h3>
+					<p class="leader__role">Director</p>
+					<p class="leader__bio">Keeps every project on time, on budget and on brand.</p>
+				</article>
+				<article class="leader" data-reveal>
+					<img
+						class="leader__photo"
+						src="/images/team-creative.svg"
+						alt="Portrait placeholder — Creative Head"
+						loading="lazy"
+					/>
+					<h3 class="leader__name">Rohan Patil</h3>
+					<p class="leader__role">Creative Head</p>
+					<p class="leader__bio">Leads concept and design — where every stall story begins.</p>
+				</article>
+			</div>
 		</div>
 	</section>
 
@@ -174,12 +222,81 @@ import WhyKalpataru from '../components/sections/WhyKalpataru.astro';
 		gap: 0.85rem;
 	}
 
+	.leadership__heading {
+		margin-top: 1.6rem;
+		max-width: 22ch;
+		font-size: clamp(1.7rem, 3.4vw, 2.9rem);
+		font-weight: 550;
+		letter-spacing: -0.02em;
+		line-height: 1.16;
+	}
+
+	.leadership__period {
+		color: var(--accent);
+	}
+
+	.leadership__grid {
+		margin-top: clamp(2.2rem, 4vw, 3.4rem);
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: clamp(1.2rem, 2.5vw, 2rem);
+	}
+
+	/* hover is border + shadow only — no image/card motion, per the user's
+	   no-motion preference */
+	.leader {
+		display: flex;
+		flex-direction: column;
+		background: var(--bg-raised);
+		border: 1px solid var(--line);
+		padding: clamp(1.1rem, 2vw, 1.5rem);
+		transition: border-color 0.35s var(--ease-swift), box-shadow 0.35s var(--ease-swift);
+	}
+
+	.leader:hover {
+		border-color: var(--ink-faint);
+		box-shadow: 0 18px 40px rgba(16, 37, 43, 0.08);
+	}
+
+	.leader__photo {
+		width: 100%;
+		aspect-ratio: 4 / 5;
+		object-fit: cover;
+	}
+
+	.leader__name {
+		margin-top: 1.1rem;
+		font-size: 1.05rem;
+		font-weight: 650;
+		letter-spacing: -0.01em;
+	}
+
+	.leader__role {
+		margin-top: 0.3rem;
+		font-size: 0.7rem;
+		font-weight: 600;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--accent-deep);
+	}
+
+	.leader__bio {
+		margin-top: 0.8rem;
+		font-size: 0.92rem;
+		line-height: 1.6;
+		color: var(--ink-dim);
+	}
+
 	@media (max-width: 899px) {
 		.story__main,
 		.story__figure,
 		.story-cta__grid > div:first-child,
 		.story-cta__side {
 			grid-column: 1 / -1;
+		}
+
+		.leadership__grid {
+			grid-template-columns: 1fr;
 		}
 	}
 </style>

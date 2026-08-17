@@ -193,9 +193,11 @@
 }
 
 /* inside dark sections the solid button turns white — its text must stay
-   ink-dark (the light-theme text would be white-on-white) */
-.theme-dark .btn--solid,
-.theme-dark .btn--solid:hover {
+   ink-dark (the light-theme text would be white-on-white). The doubled
+   class beats the component's scoped .btn--solid selector in specificity,
+   which otherwise ties and wins by source order. */
+.theme-dark .btn.btn--solid,
+.theme-dark .btn.btn--solid:hover {
 	color: var(--ink-strong);
 }
 
@@ -399,6 +401,69 @@ main > * + * {
 
 .skip-link:focus {
 	transform: none;
+}
+
+/* --------------------------------------- mobile sticky quick-nav tab bar */
+
+/* Mobile-only bottom bar: 5 equal columns — Work / Services / Home /
+   Contact Us / WhatsApp — icon above a tiny label in each (user-specified
+   layout). The current page is highlighted via .is-active. */
+.sticky-cta {
+	position: fixed;
+	inset: auto 0 0 0;
+	z-index: 60;
+	display: none;
+	grid-template-columns: repeat(5, 1fr);
+	padding: 0.45rem max(0.25rem, env(safe-area-inset-right))
+		calc(0.45rem + env(safe-area-inset-bottom)) max(0.25rem, env(safe-area-inset-left));
+	background: var(--bg-raised);
+	border-top: 1px solid var(--line);
+	box-shadow: 0 -10px 30px rgba(16, 37, 43, 0.09);
+}
+
+.sticky-cta__item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.32rem;
+	min-height: 3.3rem;
+	font-size: 0.6rem;
+	font-weight: 650;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	text-decoration: none;
+	line-height: 1;
+	text-align: center;
+	color: var(--ink-faint);
+	transition: color 0.35s var(--ease-swift);
+}
+
+.sticky-cta__item svg {
+	width: 1.15rem;
+	height: 1.15rem;
+	flex: none;
+}
+
+.sticky-cta__item:hover,
+.sticky-cta__item:focus-visible,
+.sticky-cta__item.is-active {
+	color: var(--accent-deep);
+}
+
+body.menu-open .sticky-cta {
+	display: none;
+}
+
+@media (max-width: 767px) {
+	.sticky-cta {
+		display: grid;
+	}
+
+	/* keep the footer clear of the fixed bar */
+	body {
+		padding-bottom: calc(4.75rem + env(safe-area-inset-bottom));
+	}
 }
 
 /* ----------------------------------------------------------- reduced motion */

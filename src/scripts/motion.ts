@@ -154,31 +154,6 @@ export function initMotion(reduceMotion: boolean): void {
 		});
 	});
 
-	/* ------------------------------------------------- image wipe reveals */
-	// [data-img-reveal] containers clip-reveal upward while the photo inside
-	// settles from a slight zoom. The image transform is cleared on
-	// completion so CSS hover states keep full control afterwards.
-	document.querySelectorAll<HTMLElement>('[data-img-reveal]').forEach((wrap) => {
-		const img = wrap.querySelector('img');
-		const tl = gsap.timeline({
-			scrollTrigger: { trigger: wrap, start: 'top 82%', once: true },
-		});
-		tl.fromTo(
-			wrap,
-			{ clipPath: 'inset(0 0 100% 0)' },
-			{ clipPath: 'inset(0 0 0% 0)', duration: 1.15, ease: 'power3.inOut' },
-			0
-		);
-		if (img) {
-			tl.fromTo(
-				img,
-				{ scale: 1.18 },
-				{ scale: 1, duration: 1.4, ease: 'power3.out', clearProps: 'transform' },
-				0
-			);
-		}
-	});
-
 	/* ------------------------------------------------- staggered service rows */
 	gsap.utils.toArray<HTMLElement>('.service-row').forEach((row, i) => {
 		gsap.from(row, {

@@ -92,4 +92,32 @@ import PlaceholderImage from '../ui/PlaceholderImage.astro';
 	.cta :global(.btn--solid) {
 		color: #10252b;
 	}
+
+	/* soft attention halo behind the primary CTA — a slow teal pulse that
+	   draws the eye without moving anything else (the global reduced-motion
+	   rule already freezes it via *::after) */
+	.cta__actions :global(.btn--solid) {
+		position: relative;
+	}
+
+	.cta__actions :global(.btn--solid)::after {
+		content: '';
+		position: absolute;
+		inset: -0.5rem;
+		border: 1px solid rgba(95, 203, 209, 0.55);
+		border-radius: 0.6rem;
+		pointer-events: none;
+		animation: cta-halo 3s ease-out infinite;
+	}
+
+	@keyframes cta-halo {
+		0% {
+			transform: scale(0.94);
+			opacity: 0.8;
+		}
+		100% {
+			transform: scale(1.32);
+			opacity: 0;
+		}
+	}
 </style>
