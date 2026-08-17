@@ -1,0 +1,143 @@
+---
+import PlaceholderImage from './PlaceholderImage.astro';
+
+/* Shared page header for inner pages: deep-teal banner with the site's
+   standard entrance animation (data-hero-* hooks driven by scripts/motion.ts).
+   Pass `media` to show a photo behind the title, or omit it for a quiet
+   teal-glow backdrop (legal pages). */
+
+interface Props {
+	eyebrow: string;
+	lines: string[];
+	subtitle?: string;
+	media?: string;
+	mediaAlt?: string;
+	compact?: boolean;
+}
+
+const { eyebrow, lines, subtitle, media, mediaAlt, compact = false } = Astro.props;
+---
+
+<section class="page-hero theme-dark tone-accent" id="top" class:list={{ 'page-hero--compact': compact }}>
+	<!-- background: real photo when provided, else a slow teal glow -->
+	<div class="page-hero__media" data-hero-media aria-hidden="true">
+		{
+			media ? (
+				<PlaceholderImage src={media} alt={mediaAlt ?? ''} aspect="auto" decorative loading="eager" />
+			) : (
+				<div class="page-hero__glow"></div>
+			)
+		}
+	</div>
+	{media && <div class="page-hero__scrim" aria-hidden="true"></div>}
+
+	<div class="container page-hero__inner">
+		<p class="eyebrow" data-hero-eyebrow>{eyebrow}</p>
+		<h1 class="page-hero__title">
+			{lines.map((line) => (
+				<span class="page-hero__mask"
+					><span class="page-hero__line" data-hero-line>{line}</span></span
+				>
+			))}
+		</h1>
+		{subtitle && <p class="page-hero__sub" data-hero-copy>{subtitle}</p>}
+	</div>
+</section>
+
+<style>
+	.page-hero {
+		position: relative;
+		display: flex;
+		align-items: flex-end;
+		min-height: 68vh;
+		overflow: hidden;
+		/* deep-teal backstop (matches tone-accent) */
+		background: var(--accent-deep);
+	}
+
+	/* legal pages get a shorter, calmer header */
+	.page-hero--compact {
+		min-height: 46vh;
+	}
+
+	.page-hero__media {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+	}
+
+	.page-hero__media :global(.ph) {
+		height: 100%;
+	}
+
+	/* decorative backdrop when no photo is passed — slow teal breathing glow */
+	.page-hero__glow {
+		position: absolute;
+		inset: 0;
+		background:
+			radial-gradient(52% 68% at 78% 28%, rgba(95, 203, 209, 0.22) 0%, rgba(95, 203, 209, 0) 70%),
+			radial-gradient(44% 58% at 14% 82%, rgba(1, 101, 133, 0.5) 0%, rgba(1, 101, 133, 0) 70%);
+		animation: page-hero-glow 9s ease-in-out infinite alternate;
+	}
+
+	@keyframes page-hero-glow {
+		from {
+			transform: translate3d(-1.5%, -1%, 0) scale(1.02);
+		}
+		to {
+			transform: translate3d(1.5%, 1.5%, 0) scale(1.08);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.page-hero__glow {
+			animation: none;
+		}
+	}
+
+	/* left-darkened scrim keeps the title readable over a bright photo */
+	.page-hero__scrim {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		background:
+			linear-gradient(90deg, rgba(10, 20, 24, 0.72) 0%, rgba(10, 20, 24, 0.4) 42%, rgba(10, 20, 24, 0.08) 62%, rgba(10, 20, 24, 0.2) 100%),
+			linear-gradient(180deg, rgba(10, 20, 24, 0.6) 0%, rgba(10, 20, 24, 0.12) 55%, rgba(10, 20, 24, 0.5) 100%);
+	}
+
+	.page-hero__inner {
+		position: relative;
+		z-index: 2;
+		padding-block: calc(var(--header-h) + 3.5rem) clamp(3.5rem, 7vw, 6rem);
+	}
+
+	.page-hero__title {
+		margin-top: 1.2rem;
+		font-size: clamp(2rem, 5.2vw, 4.1rem);
+		font-weight: 600;
+		letter-spacing: -0.03em;
+		line-height: 0.98;
+		text-transform: uppercase;
+		max-width: 18ch;
+	}
+
+	/* masks for the line entrance animation */
+	.page-hero__mask {
+		display: block;
+		overflow: hidden;
+	}
+
+	.page-hero__line {
+		display: block;
+		padding-bottom: 0.06em;
+		will-change: transform;
+	}
+
+	.page-hero__sub {
+		margin-top: 1.6rem;
+		max-width: 54ch;
+		font-size: clamp(0.95rem, 1.15vw, 1.1rem);
+		line-height: 1.7;
+		color: var(--ink-dim);
+	}
+</style>

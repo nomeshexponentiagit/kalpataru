@@ -254,3 +254,57 @@ main > * + * {
 		transition-duration: 0.01ms !important;
 	}
 }
+
+/* ------------------------------------------------------------ legal prose */
+
+/* Shared reading styles for the privacy / terms pages. */
+.prose {
+	max-width: 46rem;
+}
+
+.prose > p:first-of-type {
+	font-size: 1.02rem;
+	color: var(--ink-dim);
+}
+
+.prose h2 {
+	margin-top: 2.75rem;
+	font-size: 1.3rem;
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	line-height: 1.25;
+}
+
+.prose h3 {
+	margin-top: 1.8rem;
+	font-size: 1rem;
+	font-weight: 600;
+}
+
+.prose p,
+.prose ul,
+.prose ol {
+	margin-top: 0.9rem;
+	font-size: 0.92rem;
+	line-height: 1.75;
+	color: var(--ink-dim);
+}
+
+.prose ul,
+.prose ol {
+	padding-left: 1.2rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+}
+
+.prose a {
+	color: var(--accent-deep);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.prose strong {
+	color: var(--ink);
+	font-weight: 600;
+}

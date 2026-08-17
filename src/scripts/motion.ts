@@ -26,8 +26,12 @@ export function initMotion(reduceMotion: boolean): void {
 				'[data-hero-copy], [data-hero-markets], [data-hero-ctas]',
 				{ opacity: 0, y: 22, duration: 0.9, stagger: 0.1 },
 				0.85
-			)
-			.from('.hero__scroll', { opacity: 0, duration: 0.8 }, 1.4);
+			);
+
+		// the scroll indicator only exists on the homepage hero
+		if (document.querySelector('.hero__scroll')) {
+			tl.from('.hero__scroll', { opacity: 0, duration: 0.8 }, 1.4);
+		}
 	}
 
 	/* --------------------------------------- parallax on full-bleed media */

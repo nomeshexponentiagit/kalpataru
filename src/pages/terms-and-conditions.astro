@@ -1,0 +1,111 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import { SITE } from '../data/site';
+---
+
+<!-- ALL LEGAL TEXT ON THIS PAGE IS DUMMY / PLACEHOLDER.
+     Replace with real, reviewed legal text before launch. -->
+
+<Layout
+	title="Terms & Conditions — Kalpataru Exhibition"
+	description="The terms that apply when you use the Kalpataru Exhibition website and services."
+>
+	<PageHero
+		eyebrow="Legal"
+		lines={['Terms &', 'Conditions']}
+		subtitle="The terms that apply when you use this website and our services."
+		compact
+	/>
+
+	<section class="section legal tone-white">
+		<div class="container">
+			<article class="prose" data-reveal>
+				<p>
+					<!-- DUMMY — real effective date to be added -->
+					Last updated: August 2026
+				</p>
+				<p>
+					<!-- DUMMY intro -->
+					These terms ("Terms") govern your use of this website and the services of Kalpataru
+					Exhibition ("we", "us"). By using this website you agree to these Terms.
+				</p>
+
+				<h2>1. Our services</h2>
+				<!-- DUMMY — align with the real scope of work -->
+				<p>
+					Kalpataru Exhibition provides exhibition stall design, fabrication and turnkey
+					installation services. Descriptions and imagery on this website illustrate the type
+					of work we do and do not constitute a binding offer.
+				</p>
+
+				<h2>2. Quotes and orders</h2>
+				<!-- DUMMY -->
+				<p>
+					All quotations are estimates and remain valid only for the period stated on the
+					quotation. A project is confirmed only when both parties sign a written agreement or
+					acknowledge an accepted order.
+				</p>
+
+				<h2>3. Payment</h2>
+				<!-- DUMMY -->
+				<p>
+					Payment schedules are defined in each project agreement. Late payments may delay
+					production and delivery.
+				</p>
+
+				<h2>4. Client responsibilities</h2>
+				<!-- DUMMY -->
+				<p>
+					Clients are responsible for providing accurate briefs, approved artwork and any
+					permissions required from show organisers in a timely manner. Delays in approvals may
+					affect delivery dates.
+				</p>
+
+				<h2>5. Intellectual property</h2>
+				<!-- DUMMY -->
+				<p>
+					Designs, drawings and concepts we create remain our property until full payment is
+					received, after which agreed rights transfer to the client. We may photograph
+					completed projects and show them in our portfolio unless agreed otherwise in writing.
+				</p>
+
+				<h2>6. Limitation of liability</h2>
+				<!-- DUMMY — have real legal text drafted before launch -->
+				<p>
+					To the fullest extent permitted by law, Kalpataru Exhibition is not liable for
+					indirect or consequential losses. Our total liability in connection with any project
+					is limited to the amount paid by the client for that project.
+				</p>
+
+				<h2>7. Cancellations</h2>
+				<!-- DUMMY -->
+				<p>
+					Cancellation terms are set out in each project agreement and depend on the stage of
+					the project at the time of cancellation.
+				</p>
+
+				<h2>8. Website use</h2>
+				<!-- DUMMY -->
+				<p>
+					Content on this website is provided for general information only. You may not copy,
+					reproduce or redistribute our content without written permission.
+				</p>
+
+				<h2>9. Changes</h2>
+				<!-- DUMMY -->
+				<p>
+					We may update these Terms from time to time. The current version will always be
+					available on this page.
+				</p>
+
+				<h2>10. Contact</h2>
+				<!-- DUMMY -->
+				<p>
+					Questions about these Terms? Email <a href={`mailto:${SITE.email}`}>{SITE.email}</a> or
+					call {SITE.phone}.
+				</p>
+			</article>
+		</div>
+	</section>
+</Layout>

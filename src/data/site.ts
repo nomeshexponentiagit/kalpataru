@@ -11,14 +11,20 @@ export const SITE = {
 	email: 'hello@kalpataru-exhibition.com',
 	// DUMMY — replace with the real company phone.
 	phone: '+91 98220 00000',
+	// DUMMY — replace with the real registered office address.
+	address: 'Kalpataru Exhibition, Unit 4, Exhibition Complex, Pune 411001, Maharashtra, India',
+	// DUMMY — replace with real working hours.
+	hours: 'Mon – Sat, 10:00 – 19:00 IST',
 };
 
+/* Hash links point at homepage sections, so they are written "/#work" etc.
+   Header/Footer strip the leading slash while already on the homepage. */
 export const NAV_LINKS = [
-	{ label: 'Work', href: '#work' },
-	{ label: 'Services', href: '#services' },
-	{ label: 'Industries', href: '#industries' },
-	{ label: 'About', href: '#about' },
-	{ label: 'Contact', href: '#contact' },
+	{ label: 'Work', href: '/#work' },
+	{ label: 'Services', href: '/#services' },
+	{ label: 'Industries', href: '/#industries' },
+	{ label: 'About', href: '/about' },
+	{ label: 'Contact', href: '/contact' },
 ] as const;
 
 export const MARKETS = ['India', 'Japan', 'China', 'USA'] as const;
@@ -26,14 +32,18 @@ export const MARKETS = ['India', 'Japan', 'China', 'USA'] as const;
 export const CITIES = ['Mumbai', 'Pune', 'Delhi', 'Hyderabad'] as const;
 
 export const FOOTER_NAV = [
-	{ label: 'Work', href: '#work' },
-	{ label: 'Services', href: '#services' },
-	{ label: 'Industries', href: '#industries' },
-	{ label: 'Locations', href: '#locations' },
-	{ label: 'About', href: '#about' },
-	// TODO — link once a resources page exists.
-	{ label: 'Resources', href: '#' },
-	{ label: 'Contact', href: '#contact' },
+	{ label: 'Work', href: '/#work' },
+	{ label: 'Services', href: '/#services' },
+	{ label: 'Industries', href: '/#industries' },
+	{ label: 'Locations', href: '/#locations' },
+	{ label: 'About', href: '/about' },
+	{ label: 'Contact', href: '/contact' },
+] as const;
+
+/* Legal pages live in the footer bottom bar on every page. */
+export const LEGAL_LINKS = [
+	{ label: 'Privacy Policy', href: '/privacy-policy' },
+	{ label: 'Terms & Conditions', href: '/terms-and-conditions' },
 ] as const;
 
 // DUMMY — real social profile URLs to be added.

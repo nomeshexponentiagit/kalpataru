@@ -9,11 +9,16 @@ const LOGO_DIR = new URL('../../../public/brand/', import.meta.url);
 const logoFile = ['logo.svg', 'logo.png', 'logo.webp', 'logo.jpg'].find((f) =>
 	fs.existsSync(new URL(f, LOGO_DIR))
 );
+
+/* Hash links ("/#work") scroll in place on the homepage; on inner pages
+   they must keep the leading slash so the browser goes home first. */
+const isHome = Astro.url.pathname === '/';
+const navHref = (href: string) => (isHome && href.startsWith('/#') ? href.slice(1) : href);
 ---
 
 <header class="site-header" data-header>
 	<div class="container site-header__row">
-		<a class="site-header__brand" href="#top">
+		<a class="site-header__brand" href={isHome ? '#top' : '/'}>
 			{
 				logoFile ? (
 					<img
@@ -34,7 +39,7 @@ const logoFile = ['logo.svg', 'logo.png', 'logo.webp', 'logo.jpg'].find((f) =>
 				{
 					NAV_LINKS.map(({ label, href }) => (
 						<li>
-							<a class="site-header__link" href={href}>{label}</a>
+							<a class="site-header__link" href={navHref(href)}>{label}</a>
 						</li>
 					))
 				}
@@ -42,7 +47,7 @@ const logoFile = ['logo.svg', 'logo.png', 'logo.webp', 'logo.jpg'].find((f) =>
 		</nav>
 
 		<div class="site-header__cta">
-			<Button href="#contact" variant="solid" size="sm">Start a project</Button>
+			<Button href="/contact" variant="solid" size="sm">Start a project</Button>
 		</div>
 
 		<button
@@ -64,14 +69,14 @@ const logoFile = ['logo.svg', 'logo.png', 'logo.webp', 'logo.jpg'].find((f) =>
 				{
 					NAV_LINKS.map(({ label, href }, i) => (
 						<li style={`--i:${i}`}>
-							<a class="site-menu__link" href={href}>{label}</a>
+							<a class="site-menu__link" href={navHref(href)}>{label}</a>
 						</li>
 					))
 				}
 			</ul>
 		</nav>
 		<div class="site-menu__foot">
-			<Button href="#contact" variant="solid">Start a project</Button>
+			<Button href="/contact" variant="solid">Start a project</Button>
 			<p class="site-menu__markets">India · Japan · China · USA</p>
 		</div>
 	</div>

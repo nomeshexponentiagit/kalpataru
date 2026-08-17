@@ -1,0 +1,322 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import SectionLabel from '../components/ui/SectionLabel.astro';
+import { MARKETS, SITE } from '../data/site';
+---
+
+<!-- CONTACT DETAILS ARE DUMMY — SITE.email / SITE.phone / SITE.address / SITE.hours
+     in src/data/site.ts must be replaced with verified real details before launch. -->
+
+<Layout
+	title="Contact — Kalpataru Exhibition"
+	description="Tell us about your next exhibition and get a concept, a design and a budget from Kalpataru Exhibition."
+>
+	<PageHero
+		eyebrow="Contact"
+		lines={["Let's talk about", 'your next build']}
+		subtitle="Tell us about your show and we'll come back with a concept, a design and a budget — usually within two working days."
+		media="/images/cta.jpg"
+		mediaAlt="A Kalpataru exhibition stall with a warm lit facade"
+		compact
+	/>
+
+	<section class="section contact-info">
+		<div class="container contact-info__grid">
+			<div class="contact-info__label" data-reveal>
+				<SectionLabel text="Reach us" />
+			</div>
+
+			<div class="contact-info__cards">
+				<div class="contact-card" data-reveal>
+					<p class="contact-card__head">Email</p>
+					<a class="contact-card__value" href={`mailto:${SITE.email}`}>{SITE.email}</a>
+					<p class="contact-card__note">For briefs, RFQs and general enquiries.</p>
+				</div>
+
+				<div class="contact-card" data-reveal>
+					<p class="contact-card__head">Phone</p>
+					<a class="contact-card__value" href={`tel:${SITE.phone.replace(/\s/g, '')}`}>{SITE.phone}</a>
+					<p class="contact-card__note">{SITE.hours}</p>
+				</div>
+
+				<div class="contact-card" data-reveal>
+					<p class="contact-card__head">Office</p>
+					<p class="contact-card__value">{SITE.address}</p>
+					<p class="contact-card__note">Visits by appointment.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section contact-form tone-white">
+		<div class="container contact-form__grid">
+			<div class="contact-form__pitch">
+				<div data-reveal>
+					<SectionLabel text="Start a project" />
+				</div>
+				<h2 class="contact-form__heading" data-reveal>
+					Tell us about the show<span class="contact-form__period">.</span>
+				</h2>
+				<p class="contact-form__copy" data-reveal>
+					Share what you know so far — the event, the dates, the floor plan if you have one.
+					The more detail you give, the sharper the first concept will be.
+				</p>
+				<ul class="contact-form__markets" data-reveal>
+					{MARKETS.map((market) => <li>{market}</li>)}
+				</ul>
+			</div>
+
+			<!-- Static-site enquiry form: on submit it opens the visitor's email app
+			     with the message pre-filled (no backend on this site). Swap in a real
+			     form handler once one exists. -->
+			<form class="enquiry" data-enquiry data-reveal novalidate>
+				<div class="enquiry__row">
+					<label class="enquiry__field">
+						<span>Name *</span>
+						<input type="text" name="name" required autocomplete="name" />
+					</label>
+					<label class="enquiry__field">
+						<span>Company</span>
+						<input type="text" name="company" autocomplete="organization" />
+					</label>
+				</div>
+				<div class="enquiry__row">
+					<label class="enquiry__field">
+						<span>Email *</span>
+						<input type="email" name="email" required autocomplete="email" />
+					</label>
+					<label class="enquiry__field">
+						<span>Phone</span>
+						<input type="tel" name="phone" autocomplete="tel" />
+					</label>
+				</div>
+				<label class="enquiry__field">
+					<span>Event / dates</span>
+					<input type="text" name="event" placeholder="e.g. Expo, Mumbai — March 2027" />
+				</label>
+				<label class="enquiry__field">
+					<span>Message *</span>
+					<textarea name="message" rows="5" required placeholder="Tell us about your stall, size, city, budget…"></textarea>
+				</label>
+				<button class="btn btn--solid enquiry__submit" type="submit">Send enquiry</button>
+				<p class="enquiry__note">
+					This opens your email app with the message ready to send. Or write to us directly at
+					<a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+				</p>
+			</form>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.contact-info__grid {
+		display: grid;
+		grid-template-columns: repeat(12, 1fr);
+		gap: 2rem;
+		align-items: start;
+	}
+
+	.contact-info__label {
+		grid-column: 1 / 3;
+	}
+
+	.contact-info__cards {
+		grid-column: 3 / 13;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: clamp(1rem, 2.5vw, 2rem);
+	}
+
+	.contact-card {
+		padding: 1.9rem;
+		background: var(--bg-raised);
+		border: 1px solid var(--line);
+		transition: border-color 0.35s var(--ease-swift), transform 0.35s var(--ease-swift);
+	}
+
+	.contact-card:hover {
+		border-color: var(--accent);
+		transform: translateY(-4px);
+	}
+
+	.contact-card__head {
+		font-size: 0.66rem;
+		font-weight: 600;
+		letter-spacing: 0.26em;
+		text-transform: uppercase;
+		color: var(--accent-deep);
+	}
+
+	.contact-card__value {
+		display: block;
+		margin-top: 1rem;
+		font-size: 1.02rem;
+		font-weight: 550;
+		line-height: 1.5;
+		overflow-wrap: anywhere;
+	}
+
+	.contact-card__note {
+		margin-top: 0.8rem;
+		font-size: 0.82rem;
+		color: var(--ink-faint);
+	}
+
+	.contact-form__grid {
+		display: grid;
+		grid-template-columns: repeat(12, 1fr);
+		gap: clamp(2rem, 5vw, 4rem);
+		align-items: start;
+	}
+
+	.contact-form__pitch {
+		grid-column: 1 / 6;
+	}
+
+	.contact-form__heading {
+		margin-top: 1.6rem;
+		font-size: clamp(1.7rem, 3.4vw, 2.9rem);
+		font-weight: 550;
+		letter-spacing: -0.02em;
+		line-height: 1.16;
+	}
+
+	.contact-form__period {
+		color: var(--accent);
+	}
+
+	.contact-form__copy {
+		margin-top: 1.4rem;
+		max-width: 44ch;
+		color: var(--ink-dim);
+	}
+
+	.contact-form__markets {
+		margin-top: 2rem;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+
+	.contact-form__markets li {
+		padding: 0.45rem 0.95rem;
+		border: 1px solid var(--line-strong);
+		font-size: 0.68rem;
+		font-weight: 600;
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+		color: var(--ink-dim);
+	}
+
+	.enquiry {
+		grid-column: 6 / 13;
+		display: flex;
+		flex-direction: column;
+		gap: 1.4rem;
+		padding: clamp(1.6rem, 3.5vw, 2.75rem);
+		background: var(--bg);
+		border: 1px solid var(--line);
+	}
+
+	.enquiry__row {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1.4rem;
+	}
+
+	.enquiry__field {
+		display: flex;
+		flex-direction: column;
+		gap: 0.55rem;
+	}
+
+	.enquiry__field span {
+		font-size: 0.68rem;
+		font-weight: 600;
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+		color: var(--ink-dim);
+	}
+
+	.enquiry__field input,
+	.enquiry__field textarea {
+		padding: 0.85rem 1rem;
+		background: var(--bg-raised);
+		border: 1px solid var(--line-strong);
+		font: inherit;
+		font-size: 0.95rem;
+		color: var(--ink);
+		transition: border-color 0.3s var(--ease-swift);
+	}
+
+	.enquiry__field textarea {
+		resize: vertical;
+	}
+
+	.enquiry__field input:focus-visible,
+	.enquiry__field textarea:focus-visible {
+		outline: none;
+		border-color: var(--accent);
+	}
+
+	.enquiry__submit {
+		align-self: flex-start;
+		margin-top: 0.4rem;
+	}
+
+	.enquiry__note {
+		font-size: 0.78rem;
+		line-height: 1.6;
+		color: var(--ink-faint);
+	}
+
+	.enquiry__note a {
+		color: var(--accent-deep);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	@media (max-width: 899px) {
+		.contact-info__label,
+		.contact-info__cards,
+		.contact-form__pitch,
+		.enquiry {
+			grid-column: 1 / -1;
+		}
+
+		.contact-info__cards {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 599px) {
+		.enquiry__row {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
+
+<script define:vars={{ email: SITE.email }}>
+	// Mailto fallback for the static form: builds the email locally and opens
+	// the visitor's mail client addressed to the company. Replace with a real
+	// backend handler when one exists.
+	const form = document.querySelector('[data-enquiry]');
+	form?.addEventListener('submit', (event) => {
+		event.preventDefault();
+		const fd = new FormData(form);
+		const pick = (key) => String(fd.get(key) ?? '').trim();
+		const lines = [
+			`Name: ${pick('name')}`,
+			`Company: ${pick('company') || '—'}`,
+			`Email: ${pick('email')}`,
+			`Phone: ${pick('phone') || '—'}`,
+			`Event: ${pick('event') || '—'}`,
+			'',
+			pick('message'),
+		];
+		window.location.href = `mailto:${email}?subject=${encodeURIComponent(
+			'Exhibition enquiry — ' + (pick('company') || pick('name'))
+		)}&body=${encodeURIComponent(lines.join('\n'))}`;
+	});
+</script>

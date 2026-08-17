@@ -1,0 +1,184 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import SectionLabel from '../components/ui/SectionLabel.astro';
+import Button from '../components/ui/Button.astro';
+import Stats from '../components/sections/Stats.astro';
+import WhyKalpataru from '../components/sections/WhyKalpataru.astro';
+---
+
+<Layout
+	title="About — Kalpataru Exhibition"
+	description="Kalpataru Exhibition designs, fabricates and installs exhibition stalls and brand experiences across India and international markets."
+>
+	<PageHero
+		eyebrow="About Kalpataru"
+		lines={['Building spaces', 'that sell ideas']}
+		subtitle="Design, fabrication and turnkey execution for exhibition stalls — from the first concept sketch to the moment the lights come on."
+		media="/images/about-hero.jpg"
+		mediaAlt="A completed Kalpataru exhibition stall with a large backlit facade"
+	/>
+
+	<section class="section story">
+		<div class="container story__grid">
+			<div class="story__main">
+				<div data-reveal>
+					<SectionLabel text="Our story" />
+				</div>
+				<h2 class="story__heading" data-reveal>
+					We turn empty halls into rooms people walk into on purpose<span class="story__period">.</span>
+				</h2>
+				<!-- DUMMY copy — replace with the real company story before launch -->
+				<div class="story__copy" data-reveal>
+					<p>
+						Kalpataru began with a simple belief: a stall is not a booth with walls — it is the
+						first room a brand ever invites a customer into. Every project starts the same way,
+						with the brand's story and the visitor's attention span in the same sketch.
+					</p>
+					<p>
+						Today we design, fabricate and install exhibition experiences for clients across
+						India, Japan, China and the USA — handling structure, graphics, lighting, AV and
+						on-site installation as one turnkey team.
+					</p>
+				</div>
+			</div>
+
+			<figure class="story__figure" data-reveal>
+				<!-- REAL stall photo from the user's kalpataruexhibition.com portfolio -->
+				<img
+					src="/images/about-story.jpg"
+					alt="A Kalpataru exhibition stand with large-format wall graphics"
+					loading="lazy"
+				/>
+				<!-- DUMMY caption — replace with a real project reference -->
+				<figcaption>Wall graphics and structure, installed on site — recent international show</figcaption>
+			</figure>
+		</div>
+	</section>
+
+	<Stats />
+
+	<WhyKalpataru />
+
+	<section class="section story-cta tone-tint">
+		<div class="container story-cta__grid">
+			<div>
+				<div data-reveal>
+					<SectionLabel text="Next step" />
+				</div>
+				<h2 class="story-cta__heading" data-reveal>
+					Have a show on the calendar?<br />Let's design your stall<span class="story-cta__period">.</span>
+				</h2>
+			</div>
+			<div class="story-cta__side" data-reveal>
+				<p>
+					Share the show, the dates and the floor plan — we'll come back with a concept, a
+					design and a budget.
+				</p>
+				<div class="story-cta__actions">
+					<Button href="/contact" variant="solid">Talk to us</Button>
+					<Button href="/#work" variant="ghost">See the work</Button>
+				</div>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.story__grid {
+		display: grid;
+		grid-template-columns: repeat(12, 1fr);
+		gap: clamp(2rem, 5vw, 4rem);
+		align-items: center;
+	}
+
+	.story__main {
+		grid-column: 1 / 7;
+	}
+
+	.story__heading {
+		margin-top: 1.6rem;
+		font-size: clamp(1.7rem, 3.4vw, 2.9rem);
+		font-weight: 550;
+		letter-spacing: -0.02em;
+		line-height: 1.16;
+	}
+
+	.story__period {
+		color: var(--accent);
+	}
+
+	.story__copy {
+		margin-top: 1.8rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1.1rem;
+		max-width: 56ch;
+		color: var(--ink-dim);
+	}
+
+	.story__figure {
+		grid-column: 7 / 13;
+	}
+
+	.story__figure img {
+		width: 100%;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+	}
+
+	.story__figure figcaption {
+		margin-top: 0.9rem;
+		font-size: 0.74rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--ink-faint);
+	}
+
+	.story-cta__grid {
+		display: grid;
+		grid-template-columns: repeat(12, 1fr);
+		gap: 2rem;
+		align-items: end;
+	}
+
+	.story-cta__grid > div:first-child {
+		grid-column: 1 / 8;
+	}
+
+	.story-cta__heading {
+		margin-top: 1.6rem;
+		font-size: clamp(1.7rem, 3.4vw, 2.9rem);
+		font-weight: 550;
+		letter-spacing: -0.02em;
+		line-height: 1.16;
+	}
+
+	.story-cta__period {
+		color: var(--accent);
+	}
+
+	.story-cta__side {
+		grid-column: 8 / 13;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1.6rem;
+		color: var(--ink-dim);
+	}
+
+	.story-cta__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.85rem;
+	}
+
+	@media (max-width: 899px) {
+		.story__main,
+		.story__figure,
+		.story-cta__grid > div:first-child,
+		.story-cta__side {
+			grid-column: 1 / -1;
+		}
+	}
+</style>

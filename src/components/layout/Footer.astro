@@ -1,5 +1,9 @@
 ---
-import { CITIES, FOOTER_NAV, MARKETS, SITE, SOCIALS } from '../../data/site';
+import { CITIES, FOOTER_NAV, LEGAL_LINKS, MARKETS, SITE, SOCIALS } from '../../data/site';
+
+/* hash links ("/#work") scroll in place on the homepage only */
+const isHome = Astro.url.pathname === '/';
+const navHref = (href: string) => (isHome && href.startsWith('/#') ? href.slice(1) : href);
 ---
 
 <!-- Dark footer — bookends the hero/CTA, uses the real logo as a light silhouette.
@@ -18,7 +22,7 @@ import { CITIES, FOOTER_NAV, MARKETS, SITE, SOCIALS } from '../../data/site';
 					<ul>
 						{
 							FOOTER_NAV.map(({ label, href }) => (
-								<li><a class="footer__link" href={href}>{label}</a></li>
+								<li><a class="footer__link" href={navHref(href)}>{label}</a></li>
 							))
 						}
 					</ul>
@@ -55,6 +59,13 @@ import { CITIES, FOOTER_NAV, MARKETS, SITE, SOCIALS } from '../../data/site';
 
 		<div class="footer__bottom">
 			<p>© {new Date().getFullYear()} {SITE.name}</p>
+			<nav class="footer__legal" aria-label="Legal">
+				{
+					LEGAL_LINKS.map(({ label, href }) => (
+						<a class="footer__link" href={href}>{label}</a>
+					))
+				}
+			</nav>
 			<a class="footer__top-link" href="#top">Back to top ↑</a>
 		</div>
 	</div>
@@ -133,6 +144,13 @@ import { CITIES, FOOTER_NAV, MARKETS, SITE, SOCIALS } from '../../data/site';
 		letter-spacing: 0.14em;
 		text-transform: uppercase;
 		color: var(--ink-faint);
+	}
+
+	.footer__legal {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.6rem 1.6rem;
 	}
 
 	.footer__top-link {

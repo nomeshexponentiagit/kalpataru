@@ -25,12 +25,12 @@ const { title, description } = Astro.props;
 		<title>{title}</title>
 		<meta name="description" content={description} />
 		<!-- TODO — verify canonical/OG urls against the production domain once live -->
-		<link rel="canonical" href={`${SITE.url}/`} />
+		<link rel="canonical" href={`${SITE.url}${Astro.url.pathname}`} />
 		<meta property="og:type" content="website" />
 		<meta property="og:site_name" content={SITE.name} />
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
-		<meta property="og:url" content={`${SITE.url}/`} />
+		<meta property="og:url" content={`${SITE.url}${Astro.url.pathname}`} />
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content={title} />
 		<meta name="twitter:description" content={description} />
