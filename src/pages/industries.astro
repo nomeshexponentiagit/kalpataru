@@ -1,0 +1,318 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import SectionLabel from '../components/ui/SectionLabel.astro';
+import Button from '../components/ui/Button.astro';
+import { WORK_GROUPS } from '../data/work';
+
+/**
+ * The industry list matches the homepage Industries section (from the brief).
+ * Per-industry blurbs and the "three rules" copy are DUMMY — replace with
+ * real, verified wording before launch. The client strip is REAL: names
+ * pulled from the live portfolio captions in src/data/work.ts.
+ * Hero photo is REAL: /images/work/re-40.jpg (Shrinath Realty).
+ */
+const INDUSTRIES = [
+	{ name: 'Pharmaceuticals', blurb: 'Clean rooms, compliance and precise branding — stands built to the strict standards pharma shows demand.' },
+	{ name: 'Chemicals', blurb: 'Material-safe structures and clear messaging for process and speciality chemical brands.' },
+	{ name: 'Automation', blurb: 'Tech-forward spaces with live demo zones for robotics and automation lines.' },
+	{ name: 'Machinery', blurb: 'Heavy-display engineering — stalls built to carry real machines safely.' },
+	{ name: 'Power', blurb: 'Large-format pavilions for power generation and distribution players.' },
+	{ name: 'Energy', blurb: 'Sustainable, high-impact environments for renewables and energy companies.' },
+	{ name: 'Jewellery', blurb: 'Gilded showcases with museum-grade lighting for gold, silver and diamond houses.' },
+	{ name: 'FMCG', blurb: 'High-traffic retail-style stalls designed to sample, taste and sell.' },
+	{ name: 'Real Estate', blurb: 'Pavilions with model galleries and consultation lounges for developers and builders.' },
+];
+
+const RULES = [
+	{
+		num: '01',
+		title: 'The rules change',
+		desc: 'Every industry writes its own rulebook — clearance heights for machinery, hygiene zones for food, security for jewellery. We design from those constraints first, not around them.',
+	},
+	{
+		num: '02',
+		title: 'The visitor differs',
+		desc: 'An engineer walks a stall differently from a home buyer. Product, demo, seating and signage are arranged for the way your visitor actually moves.',
+	},
+	{
+		num: '03',
+		title: 'The proof is on show',
+		desc: 'The stand has to carry your product, your brand and your people at the same time. Everything in our builds is tested for that triple load before it ships.',
+	},
+];
+
+/* Real client names from the live portfolio captions (generic category
+   labels are filtered out). */
+const clients = [
+	...new Set(
+		WORK_GROUPS.flatMap((group) => group.items.map((item) => item.client)).filter(
+			(client) => !['Engineering', 'Real Estate', 'Jewellery'].includes(client)
+		)
+	),
+];
+---
+
+<Layout
+	title="Industries — Kalpataru Exhibition"
+	description="Exhibition stalls for pharmaceuticals, chemicals, automation, machinery, power, energy, jewellery, FMCG and real estate."
+>
+	<PageHero
+		eyebrow="Industries"
+		lines={['Designed around', 'your industry']}
+		subtitle="Every industry brings its own rules — dimensions, compliance, product display, visitor flow. We design around them."
+		media="/images/work/re-40.jpg"
+		mediaAlt="An exhibition stall for Shrinath Realty, built by Kalpataru"
+	/>
+
+	<section class="section industries-page">
+		<div class="container">
+			<div class="section-head">
+				<div>
+					<SectionLabel text="Where we build" />
+					<h2 class="section-head__title">Nine industries.<br />One standard.</h2>
+				</div>
+			</div>
+
+			<ul class="industries-page__grid">
+				{
+					INDUSTRIES.map((industry, i) => (
+						<li class="industry-card" data-reveal>
+							<span class="industry-card__num">{String(i + 1).padStart(2, '0')}</span>
+							<h3 class="industry-card__name">{industry.name}</h3>
+							<p class="industry-card__blurb">{industry.blurb}</p>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</section>
+
+	<section class="section rules tone-white">
+		<div class="container">
+			<div class="section-head">
+				<div>
+					<SectionLabel text="Why it matters" />
+					<h2 class="section-head__title">Three rules we<br />design by.</h2>
+				</div>
+			</div>
+
+			<ol class="rules__list">
+				{
+					RULES.map((rule) => (
+						<li class="rule" data-reveal>
+							<span class="rule__num" aria-hidden="true">{rule.num}</span>
+							<h3 class="rule__title">{rule.title}</h3>
+							<p class="rule__desc">{rule.desc}</p>
+						</li>
+					))
+				}
+			</ol>
+		</div>
+	</section>
+
+	<section class="section clients tone-tint">
+		<div class="container">
+			<div class="section-head">
+				<div>
+					<SectionLabel text="Who we've built for" />
+					<h2 class="section-head__title">Real clients.<br />Real shows.</h2>
+				</div>
+			</div>
+
+			<ul class="clients__strip" data-reveal>
+				{clients.map((client) => <li>{client}</li>)}
+			</ul>
+		</div>
+	</section>
+
+	<section class="section industries-cta theme-dark tone-accent">
+		<div class="container industries-cta__inner">
+			<h2 class="industries-cta__title" data-reveal>See how we build for your industry</h2>
+			<p class="industries-cta__copy" data-reveal>
+				Eighty-one real projects, photographed at their shows — browse the builds or
+				send us your brief.
+			</p>
+			<div class="industries-cta__actions" data-reveal>
+				<Button href="/work" variant="solid">See the builds</Button>
+				<Button href="/contact" variant="ghost">Start your project</Button>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	/* --------------------------------------------------------- industry cards */
+	.industries-page__grid {
+		list-style: none;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: clamp(1rem, 2.5vw, 2rem);
+	}
+
+	.industry-card {
+		padding: 1.9rem;
+		background: var(--bg-raised);
+		border: 1px solid var(--line);
+		transition: border-color 0.35s var(--ease-swift), transform 0.35s var(--ease-swift);
+	}
+
+	.industry-card:hover {
+		border-color: var(--accent);
+		transform: translateY(-4px);
+	}
+
+	.industry-card__num {
+		display: block;
+		font-size: 0.66rem;
+		font-weight: 600;
+		letter-spacing: 0.28em;
+		color: var(--accent-deep);
+	}
+
+	.industry-card__name {
+		margin-top: 1.1rem;
+		font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+		font-weight: 550;
+		letter-spacing: -0.01em;
+		text-transform: uppercase;
+	}
+
+	.industry-card__blurb {
+		margin-top: 0.8rem;
+		font-size: 0.86rem;
+		line-height: 1.7;
+		color: var(--ink-dim);
+	}
+
+	/* ------------------------------------------------------------- three rules */
+	.rules__list {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: clamp(1.5rem, 3vw, 3rem);
+	}
+
+	.rule {
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--line);
+	}
+
+	.rule__num {
+		display: block;
+		font-size: clamp(2.8rem, 5vw, 4.4rem);
+		font-weight: 650;
+		line-height: 1;
+		letter-spacing: -0.02em;
+		-webkit-text-fill-color: transparent;
+		-webkit-text-stroke: 1px rgba(21, 19, 16, 0.38);
+		user-select: none;
+	}
+
+	.rule__title {
+		margin-top: 1.2rem;
+		font-size: 1rem;
+		font-weight: 650;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+	}
+
+	.rule__desc {
+		margin-top: 0.6rem;
+		font-size: 0.86rem;
+		line-height: 1.65;
+		color: var(--ink-dim);
+	}
+
+	/* ------------------------------------------------------------ client strip */
+	.clients__strip {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1.4rem;
+		padding-block: clamp(1.6rem, 3vw, 2.4rem);
+		border-top: 1px solid var(--line-strong);
+		border-bottom: 1px solid var(--line-strong);
+	}
+
+	.clients__strip li {
+		font-size: 0.78rem;
+		font-weight: 550;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--ink-dim);
+	}
+
+	/* ------------------------------------------------------------------- CTA */
+	.industries-cta__inner {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1.4rem;
+		text-align: center;
+	}
+
+	.industries-cta__title {
+		font-size: clamp(1.8rem, 3.6vw, 3rem);
+		font-weight: 550;
+		letter-spacing: -0.02em;
+	}
+
+	.industries-cta__copy {
+		max-width: 46ch;
+		font-size: 0.95rem;
+		line-height: 1.7;
+		color: var(--ink-dim);
+	}
+
+	.industries-cta__actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 1rem;
+		margin-top: 0.6rem;
+	}
+
+	/* ------------------------------------------------------------- responsive */
+	@media (max-width: 1023px) {
+		.industries-page__grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (max-width: 899px) {
+		.rules__list {
+			grid-template-columns: 1fr;
+			gap: 2.25rem;
+		}
+
+		.rule {
+			padding: 0 0 0 1.5rem;
+			border-top: 0;
+			border-left: 1px solid var(--line);
+			position: relative;
+		}
+
+		.rule::before {
+			content: '';
+			position: absolute;
+			left: -3px;
+			top: 0;
+			width: 5px;
+			height: 5px;
+			background: var(--accent);
+		}
+
+		.rule__num {
+			font-size: 2.4rem;
+		}
+
+		.rule__title {
+			margin-top: 0.9rem;
+		}
+	}
+
+	@media (max-width: 599px) {
+		.industries-page__grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

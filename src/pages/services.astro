@@ -1,0 +1,378 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import SectionLabel from '../components/ui/SectionLabel.astro';
+import Button from '../components/ui/Button.astro';
+
+/**
+ * Service titles come from the user's brief (same list as the homepage
+ * Services section). The longer descriptions, "includes" chips and the
+ * process copy are DUMMY — replace with real, verified wording before launch.
+ * Hero photo is REAL: /images/work/en-12.jpg (Nichrome) from the live portfolio.
+ */
+const SERVICES = [
+	{
+		num: '01',
+		title: 'Exhibition Stall Design',
+		desc: 'Concept sketches, spatial planning and 3D design that turn a floor-plan footprint into a complete stall — proportions, materials, lighting and brand.',
+		includes: ['Concept sketches', 'Floor-plan planning', '3D visualisation', 'Material & lighting specs'],
+	},
+	{
+		num: '02',
+		title: 'Exhibition Stand Design',
+		desc: 'Bespoke stand design, from layout to visual identity — a stand that looks like your brand and works like a shop floor.',
+		includes: ['Layout & zoning', 'Brand integration', 'Display planning', 'Signage & graphics'],
+	},
+	{
+		num: '03',
+		title: '3D Stall Design',
+		desc: 'Photoreal 3D visualisation for review and approval — walk through the stall before a single panel is cut.',
+		includes: ['Photoreal renders', 'Design revisions', 'Approval-ready views', 'Material previews'],
+	},
+	{
+		num: '04',
+		title: 'Exhibition Stall Fabrication',
+		desc: 'Quality-controlled production and finishing — in-house fabrication with attention to the joints, edges and lighting nobody else sees.',
+		includes: ['In-house production', 'Quality control', 'Finishing & detailing', 'Pre-show assembly'],
+	},
+	{
+		num: '05',
+		title: 'Turnkey Exhibition Solutions',
+		desc: 'Design to installation, managed end to end — one team, one schedule, one point of contact from first sketch to handover.',
+		includes: ['Project management', 'Logistics & transport', 'On-site installation', 'Dismantling & storage'],
+	},
+	{
+		num: '06',
+		title: 'International Exhibition Services',
+		desc: 'Execution support across international markets — documentation, freight and on-ground coordination for shows outside India.',
+		includes: ['Export documentation', 'Freight coordination', 'On-ground support', 'Reinstallation abroad'],
+	},
+];
+
+const STEPS = [
+	{ num: '01', title: 'Discover', desc: 'Understanding your brand, brief and audience — what the stall needs to do, not just how it should look.' },
+	{ num: '02', title: 'Design', desc: 'Concept, 3D visualisation and design development, revised with you until the stand feels right.' },
+	{ num: '03', title: 'Build', desc: 'Fabrication, finishing and quality control — panels, carpentry, metalwork and lighting built to spec.' },
+	{ num: '04', title: 'Deliver', desc: 'Logistics, installation and handover at the venue, supervised by our own site team.' },
+	{ num: '05', title: 'Experience', desc: 'Your stand live, on show, on schedule — and a partner who debriefs with you after the hall closes.' },
+];
+---
+
+<Layout
+	title="Services — Kalpataru Exhibition"
+	description="Exhibition stall design, 3D design, fabrication and turnkey exhibition solutions — end to end, on schedule."
+>
+	<PageHero
+		eyebrow="Services"
+		lines={['From first sketch', 'to final installation']}
+		subtitle="Six services, one accountable team — everything from the first concept sketch to the final handover on the show floor."
+		media="/images/work/en-12.jpg"
+		mediaAlt="An exhibition stall for Nichrome, built by Kalpataru"
+	/>
+
+	<section class="section services-page">
+		<div class="container">
+			<div class="section-head">
+				<div>
+					<SectionLabel text="What we do" />
+					<h2 class="section-head__title">One team,<br />every stage.</h2>
+				</div>
+			</div>
+
+			<ul class="services-page__list">
+				{
+					SERVICES.map((service) => (
+						<li data-reveal>
+							<a
+								class="service-detail"
+								href="/contact"
+								aria-label={`Enquire about ${service.title}`}
+							>
+								<span class="service-detail__num">{service.num}</span>
+								<div class="service-detail__main">
+									<h3 class="service-detail__title">{service.title}</h3>
+									<p class="service-detail__desc">{service.desc}</p>
+								</div>
+								<ul class="service-detail__includes">
+									{service.includes.map((tag) => <li>{tag}</li>)}
+								</ul>
+								<span class="service-detail__arrow" aria-hidden="true">
+									<svg viewBox="0 0 16 16" fill="none">
+										<path
+											d="M2 8h11M9 3.5 13.5 8 9 12.5"
+											stroke="currentColor"
+											stroke-width="1.4"
+											stroke-linecap="round"
+											stroke-linejoin="round"></path>
+									</svg>
+								</span>
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</section>
+
+	<section class="section process tone-tint">
+		<div class="container">
+			<div class="section-head">
+				<div>
+					<SectionLabel text="How we work" />
+					<h2 class="section-head__title">The process.</h2>
+				</div>
+			</div>
+
+			<ol class="process__steps">
+				{
+					STEPS.map((step) => (
+						<li class="process__step" data-reveal>
+							<span class="process__num" aria-hidden="true">{step.num}</span>
+							<h3 class="process__title">{step.title}</h3>
+							<p class="process__desc">{step.desc}</p>
+						</li>
+					))
+				}
+			</ol>
+		</div>
+	</section>
+
+	<section class="section services-cta theme-dark tone-accent">
+		<div class="container services-cta__inner">
+			<h2 class="services-cta__title" data-reveal>Have a show coming up?</h2>
+			<p class="services-cta__copy" data-reveal>
+				Send us the dates and the floor plan — we'll come back with a concept, a design
+				and a budget.
+			</p>
+			<div class="services-cta__actions" data-reveal>
+				<Button href="/contact" variant="solid">Start your project</Button>
+				<Button href="/work" variant="ghost">See the builds</Button>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	/* ---------------------------------------------------------- service rows */
+	.services-page__list {
+		list-style: none;
+	}
+
+	.service-detail {
+		display: grid;
+		grid-template-columns: 3.5rem 1.35fr 1fr auto;
+		align-items: center;
+		gap: clamp(1.25rem, 3vw, 2.5rem);
+		padding-block: clamp(1.7rem, 3vw, 2.4rem);
+		border-top: 1px solid var(--line);
+	}
+
+	.services-page__list li:last-child .service-detail {
+		border-bottom: 1px solid var(--line);
+	}
+
+	.service-detail__num {
+		font-size: 0.66rem;
+		font-weight: 600;
+		letter-spacing: 0.26em;
+		color: var(--ink-faint);
+		transition: color 0.35s var(--ease-swift);
+	}
+
+	.service-detail__title {
+		font-size: clamp(1.35rem, 2.2vw, 2rem);
+		font-weight: 550;
+		letter-spacing: -0.01em;
+		text-transform: uppercase;
+		transition: transform 0.5s var(--ease-swift), color 0.35s var(--ease-swift);
+	}
+
+	.service-detail__desc {
+		margin-top: 0.55rem;
+		max-width: 52ch;
+		font-size: 0.86rem;
+		line-height: 1.7;
+		color: var(--ink-faint);
+		transition: color 0.35s var(--ease-swift);
+	}
+
+	.service-detail__includes {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.45rem;
+	}
+
+	.service-detail__includes li {
+		padding: 0.4rem 0.8rem;
+		border: 1px solid var(--line-strong);
+		font-size: 0.62rem;
+		font-weight: 600;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--ink-dim);
+		white-space: nowrap;
+	}
+
+	.service-detail__arrow {
+		color: var(--ink-faint);
+		opacity: 0;
+		transform: translateX(-0.5rem);
+		transition: opacity 0.4s var(--ease-swift), transform 0.4s var(--ease-swift);
+	}
+
+	.service-detail__arrow svg {
+		width: 1.15rem;
+		height: 1.15rem;
+	}
+
+	.service-detail:hover .service-detail__title,
+	.service-detail:focus-visible .service-detail__title {
+		transform: translateX(0.9rem);
+	}
+
+	.service-detail:hover .service-detail__num,
+	.service-detail:focus-visible .service-detail__num,
+	.service-detail:hover .service-detail__arrow,
+	.service-detail:focus-visible .service-detail__arrow {
+		color: var(--accent);
+	}
+
+	.service-detail:hover .service-detail__desc,
+	.service-detail:focus-visible .service-detail__desc {
+		color: var(--ink-dim);
+	}
+
+	.service-detail:hover .service-detail__arrow,
+	.service-detail:focus-visible .service-detail__arrow {
+		opacity: 1;
+		transform: none;
+	}
+
+	/* --------------------------------------------------------------- process */
+	.process__steps {
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		gap: clamp(1.5rem, 3vw, 3rem);
+	}
+
+	.process__step {
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--line);
+	}
+
+	.process__num {
+		display: block;
+		font-size: clamp(2.8rem, 5vw, 4.4rem);
+		font-weight: 650;
+		line-height: 1;
+		letter-spacing: -0.02em;
+		-webkit-text-fill-color: transparent;
+		-webkit-text-stroke: 1px rgba(21, 19, 16, 0.38);
+		user-select: none;
+	}
+
+	.process__title {
+		margin-top: 1.2rem;
+		font-size: 1rem;
+		font-weight: 650;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+	}
+
+	.process__desc {
+		margin-top: 0.6rem;
+		font-size: 0.86rem;
+		line-height: 1.65;
+		color: var(--ink-dim);
+	}
+
+	/* ------------------------------------------------------------------- CTA */
+	.services-cta__inner {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1.4rem;
+		text-align: center;
+	}
+
+	.services-cta__title {
+		font-size: clamp(1.8rem, 3.6vw, 3rem);
+		font-weight: 550;
+		letter-spacing: -0.02em;
+	}
+
+	.services-cta__copy {
+		max-width: 46ch;
+		font-size: 0.95rem;
+		line-height: 1.7;
+		color: var(--ink-dim);
+	}
+
+	.services-cta__actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 1rem;
+		margin-top: 0.6rem;
+	}
+
+	/* ------------------------------------------------------------- responsive */
+	@media (max-width: 1023px) {
+		.service-detail {
+			grid-template-columns: 2.75rem 1fr;
+			gap: 1rem;
+		}
+
+		.service-detail__includes {
+			grid-column: 2;
+		}
+
+		.service-detail__arrow {
+			display: none;
+		}
+
+		.process__steps {
+			grid-template-columns: 1fr;
+			gap: 2.25rem;
+		}
+
+		.process__step {
+			padding: 0 0 0 1.5rem;
+			border-top: 0;
+			border-left: 1px solid var(--line);
+			position: relative;
+		}
+
+		.process__step::before {
+			content: '';
+			position: absolute;
+			left: -3px;
+			top: 0;
+			width: 5px;
+			height: 5px;
+			background: var(--accent);
+		}
+
+		.process__num {
+			font-size: 2.4rem;
+		}
+
+		.process__title {
+			margin-top: 0.9rem;
+		}
+	}
+
+	@media (max-width: 599px) {
+		.service-detail {
+			grid-template-columns: 1fr;
+		}
+
+		.service-detail__num {
+			display: none;
+		}
+
+		.service-detail__includes {
+			grid-column: auto;
+		}
+	}
+</style>

@@ -17,13 +17,13 @@ export const SITE = {
 	hours: 'Mon – Sat, 10:00 – 19:00 IST',
 };
 
-/* Hash links point at homepage sections, so they are written "/#services" etc.
-   Work is a real page (/work); Header/Footer strip the leading slash from
-   hash links only while already on the homepage. */
+/* Work, Services and Industries are real pages; remaining hash links point
+   at homepage sections, so they are written "/#locations" etc. Header/Footer
+   strip the leading slash from hash links only while already on the homepage. */
 export const NAV_LINKS = [
 	{ label: 'Work', href: '/work' },
-	{ label: 'Services', href: '/#services' },
-	{ label: 'Industries', href: '/#industries' },
+	{ label: 'Services', href: '/services' },
+	{ label: 'Industries', href: '/industries' },
 	{ label: 'About', href: '/about' },
 	{ label: 'Contact', href: '/contact' },
 ] as const;
@@ -34,8 +34,8 @@ export const CITIES = ['Mumbai', 'Pune', 'Delhi', 'Hyderabad'] as const;
 
 export const FOOTER_NAV = [
 	{ label: 'Work', href: '/work' },
-	{ label: 'Services', href: '/#services' },
-	{ label: 'Industries', href: '/#industries' },
+	{ label: 'Services', href: '/services' },
+	{ label: 'Industries', href: '/industries' },
 	{ label: 'Locations', href: '/#locations' },
 	{ label: 'About', href: '/about' },
 	{ label: 'Contact', href: '/contact' },
