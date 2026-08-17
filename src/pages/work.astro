@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PageHero from '../components/ui/PageHero.astro';
-import SectionLabel from '../components/ui/SectionLabel.astro';
 import Button from '../components/ui/Button.astro';
 import { WORK_GROUPS } from '../data/work';
 
@@ -9,10 +8,18 @@ import { WORK_GROUPS } from '../data/work';
  * The portfolio page. Photos and client captions are REAL — pulled from
  * the live kalpataruexhibition.com portfolio (user-approved source) and
  * generated into src/data/work.ts. Sector blurbs in work.ts are our own
- * copy (marked DUMMY there until the user approves the wording).
+ * copy (marked DUMMY there until the user approves the wording), and each
+ * item's date/event is a DUMMY placeholder pending the real data.
+ *
+ * One grid, filtered by category pills; the lightbox steps through the
+ * currently visible tiles.
  */
 
-const TONES = ['', 'tone-white', 'tone-tint'];
+const ALL_ITEMS = WORK_GROUPS.flatMap((group) =>
+	group.items.map((item) => ({ ...item, category: group.category }))
+);
+
+const ALL_BLURB = `All ${ALL_ITEMS.length} builds across engineering, real estate and jewellery — photographed at their shows. Pick a category to filter the grid.`;
 
 const altFor = (client: string, category: string) =>
 	client === category
@@ -32,49 +39,80 @@ const altFor = (client: string, category: string) =>
 		mediaAlt="An exhibition stall for ESBEE Realty, built by Kalpataru"
 	/>
 
-	{
-		WORK_GROUPS.map((group, gi) => (
-			<section class:list={['section', 'gallery', TONES[gi]]}>
-				<div class="container">
-					<div class="gallery__head">
-						<div class="gallery__label" data-reveal>
-							<SectionLabel text={group.category} />
-						</div>
-						<div class="gallery__intro" data-reveal>
-							<h2 class="gallery__title">{group.category}</h2>
-							<p class="gallery__blurb">{group.blurb}</p>
-						</div>
-						<p class="gallery__count" data-reveal>
-							{group.items.length} builds
-						</p>
-					</div>
+	<section class="section gallery-head tone-white">
+		<div class="container">
+			<div class="gallery-head__bar" data-reveal>
+				<div class="gallery-head__filters" role="group" aria-label="Filter work by category">
+					<button
+						class="filter-pill is-active"
+						type="button"
+						data-filter="all"
+						data-blurb={ALL_BLURB}
+						aria-pressed="true"
+					>
+						All categories
+					</button>
+					{
+						WORK_GROUPS.map((group) => (
+							<button
+								class="filter-pill"
+								type="button"
+								data-filter={group.category}
+								data-blurb={group.blurb}
+								aria-pressed="false"
+							>
+								{group.category}
+							</button>
+						))
+					}
+				</div>
+				<p class="gallery-head__count" data-gallery-count aria-live="polite">
+					{ALL_ITEMS.length} builds
+				</p>
+			</div>
+			<p class="gallery-head__blurb" data-gallery-blurb data-reveal>
+				{ALL_BLURB}
+			</p>
+		</div>
+	</section>
 
-					<ul class="gallery__grid">
-						{group.items.map((item) => (
-							<li data-reveal>
-								<button
-									class="gallery-item"
-									type="button"
-									data-gallery-item
-									data-src={item.src}
-									data-caption={item.client}
-								>
+	<section class="section gallery tone-white">
+		<div class="container">
+			<ul class="gallery__grid">
+				{
+					ALL_ITEMS.map((item) => (
+						<li class="gallery__item" data-category={item.category}>
+							<button
+								class="work-card"
+								type="button"
+								data-gallery-item
+								data-src={item.src}
+								data-client={item.client}
+								data-event={item.event}
+								data-date={item.date}
+							>
+								<span class="work-card__media">
 									<img
 										src={item.src}
-										alt={altFor(item.client, group.category)}
+										alt={altFor(item.client, item.category)}
 										loading="lazy"
 										decoding="async"
 										width="900"
 									/>
-									<span class="gallery-item__cap">{item.client}</span>
-								</button>
-							</li>
-						))}
-					</ul>
-				</div>
-			</section>
-		))
-	}
+									<span class="work-card__tag">{item.category}</span>
+								</span>
+								<span class="work-card__body">
+									<span class="work-card__client">{item.client}</span>
+									<span class="work-card__event">{item.event}</span>
+									<span class="work-card__date">Exhibited · {item.date}</span>
+								</span>
+							</button>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</section>
 
 	<section class="section gallery-cta theme-dark tone-accent">
 		<div class="container gallery-cta__inner">
@@ -90,7 +128,7 @@ const altFor = (client: string, category: string) =>
 		</div>
 	</section>
 
-	<!-- Lightbox: opens any gallery tile full-size. Keyboard:
+	<!-- Lightbox: opens any gallery card full-size. Keyboard:
 	     Esc closes, ←/→ step, click on the backdrop closes. -->
 	<div class="lightbox" data-lightbox role="dialog" aria-modal="true" aria-label="Project photo">
 		<button class="lightbox__close" data-lightbox-close type="button" aria-label="Close">
@@ -108,7 +146,10 @@ const altFor = (client: string, category: string) =>
 		<figure class="lightbox__stage">
 			<img data-lightbox-img src="" alt="" />
 			<figcaption class="lightbox__cap">
-				<span data-lightbox-client></span>
+				<span class="lightbox__cap-main">
+					<span data-lightbox-client></span>
+					<span data-lightbox-sub></span>
+				</span>
 				<span data-lightbox-count></span>
 			</figcaption>
 		</figure>
@@ -122,41 +163,57 @@ const altFor = (client: string, category: string) =>
 </Layout>
 
 <style>
-	/* ------------------------------------------------------------ section head */
-	.gallery__head {
-		display: grid;
-		grid-template-columns: repeat(12, 1fr);
-		gap: 2rem;
-		align-items: end;
-		margin-bottom: clamp(2.2rem, 4.5vw, 3.5rem);
+	/* ------------------------------------------------------------ filter bar */
+	.gallery-head {
+		padding-bottom: clamp(2.2rem, 4.5vw, 3.5rem);
 	}
 
-	.gallery__label {
-		grid-column: 1 / 3;
+	.gallery-head__bar {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem 1.6rem;
 	}
 
-	.gallery__intro {
-		grid-column: 3 / 9;
+	.gallery-head__filters {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.55rem;
 	}
 
-	.gallery__title {
-		font-size: clamp(2rem, 4.4vw, 3.4rem);
-		font-weight: 550;
-		letter-spacing: -0.02em;
-		line-height: 1.1;
-	}
-
-	.gallery__blurb {
-		margin-top: 1.1rem;
-		max-width: 52ch;
-		font-size: 0.92rem;
-		line-height: 1.7;
+	.filter-pill {
+		padding: 0.55rem 1.1rem;
+		border: 1px solid var(--line-strong);
+		background: transparent;
+		font: inherit;
+		font-size: 0.68rem;
+		font-weight: 600;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
 		color: var(--ink-dim);
+		cursor: pointer;
+		transition: border-color 0.3s var(--ease-swift), background-color 0.3s var(--ease-swift),
+			color 0.3s var(--ease-swift);
 	}
 
-	.gallery__count {
-		grid-column: 9 / 13;
-		justify-self: end;
+	.filter-pill:hover {
+		border-color: var(--accent);
+		color: var(--ink);
+	}
+
+	.filter-pill.is-active {
+		border-color: var(--accent-deep);
+		background: var(--accent-deep);
+		color: var(--bg-raised);
+	}
+
+	.filter-pill:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+
+	.gallery-head__count {
 		font-size: 0.68rem;
 		font-weight: 600;
 		letter-spacing: 0.26em;
@@ -164,7 +221,19 @@ const altFor = (client: string, category: string) =>
 		color: var(--ink-faint);
 	}
 
+	.gallery-head__blurb {
+		margin-top: 1.3rem;
+		max-width: 56ch;
+		font-size: 0.92rem;
+		line-height: 1.7;
+		color: var(--ink-dim);
+	}
+
 	/* ------------------------------------------------------------------ grid */
+	.gallery {
+		padding-top: clamp(2.2rem, 4.5vw, 3.5rem);
+	}
+
 	.gallery__grid {
 		list-style: none;
 		display: grid;
@@ -172,18 +241,44 @@ const altFor = (client: string, category: string) =>
 		gap: clamp(0.9rem, 2vw, 1.5rem);
 	}
 
-	.gallery-item {
-		position: relative;
-		display: block;
-		width: 100%;
-		padding: 0;
-		border: 0;
-		background: none;
-		overflow: hidden;
-		cursor: zoom-in;
+	.gallery__item.is-hidden {
+		display: none;
 	}
 
-	.gallery-item img {
+	/* -------------------------------------------------------------- the card */
+	.work-card {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		width: 100%;
+		padding: 0;
+		border: 1px solid var(--line);
+		background: var(--bg-raised);
+		overflow: hidden;
+		cursor: zoom-in;
+		text-align: left;
+		transition: border-color 0.35s var(--ease-swift), transform 0.35s var(--ease-swift),
+			box-shadow 0.35s var(--ease-swift);
+	}
+
+	.work-card:hover {
+		transform: translateY(-4px);
+		border-color: var(--line-strong);
+		box-shadow: 0 16px 32px rgba(16, 37, 43, 0.1);
+	}
+
+	.work-card:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+
+	.work-card__media {
+		position: relative;
+		display: block;
+		overflow: hidden;
+	}
+
+	.work-card__media img {
 		display: block;
 		width: 100%;
 		aspect-ratio: 4 / 3;
@@ -191,35 +286,66 @@ const altFor = (client: string, category: string) =>
 		transition: transform 0.7s var(--ease-swift);
 	}
 
-	.gallery-item:hover img,
-	.gallery-item:focus-visible img {
+	.work-card:hover img {
 		transform: scale(1.045);
 	}
 
-	.gallery-item:focus-visible {
-		outline: 2px solid var(--accent);
-		outline-offset: 2px;
+	.work-card__tag {
+		position: absolute;
+		top: 0.75rem;
+		left: 0.75rem;
+		padding: 0.32rem 0.62rem;
+		background: rgba(14, 13, 12, 0.74);
+		color: #f4efe6;
+		font-size: 0.56rem;
+		font-weight: 600;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
 	}
 
-	.gallery-item__cap {
-		position: absolute;
-		inset: auto 0 0 0;
-		padding: 2.4rem 1.1rem 0.95rem;
-		/* strong tail so white captions stay readable even on bright photos
-		   (measured against all 81 tiles; see make-work-gallery.mjs) */
-		background: linear-gradient(
-			180deg,
-			rgba(14, 13, 12, 0) 0%,
-			rgba(14, 13, 12, 0.62) 55%,
-			rgba(14, 13, 12, 0.88) 100%
-		);
-		color: #f4efe6;
-		font-size: 0.9rem;
-		font-weight: 550;
+	.work-card__body {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+		padding: 1.05rem 1.15rem 1.2rem;
+	}
+
+	.work-card__client {
+		font-size: 1rem;
+		font-weight: 600;
 		line-height: 1.35;
-		text-align: left;
-		text-shadow: 0 1px 3px rgba(10, 9, 8, 0.5);
-		pointer-events: none;
+		color: var(--ink);
+	}
+
+	.work-card__event {
+		font-size: 0.82rem;
+		line-height: 1.45;
+		color: var(--ink-dim);
+	}
+
+	.work-card__date {
+		margin-top: 0.2rem;
+		font-size: 0.6rem;
+		font-weight: 600;
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+		color: var(--ink-faint);
+	}
+
+	/* soft re-entrance when the filter changes */
+	.gallery__item.is-enter .work-card {
+		animation: card-in 0.5s var(--ease-out) both;
+	}
+
+	@keyframes card-in {
+		from {
+			opacity: 0;
+			transform: translateY(12px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
 	}
 
 	/* ------------------------------------------------------------------ CTA */
@@ -295,6 +421,17 @@ const altFor = (client: string, category: string) =>
 		font-weight: 550;
 	}
 
+	.lightbox__cap-main {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.35rem 0.9rem;
+	}
+
+	.lightbox__cap-main [data-lightbox-sub] {
+		color: rgba(244, 239, 230, 0.65);
+	}
+
 	.lightbox__cap [data-lightbox-count] {
 		font-size: 0.68rem;
 		font-weight: 600;
@@ -366,16 +503,6 @@ const altFor = (client: string, category: string) =>
 		.gallery__grid {
 			grid-template-columns: repeat(2, 1fr);
 		}
-
-		.gallery__label,
-		.gallery__intro,
-		.gallery__count {
-			grid-column: 1 / -1;
-		}
-
-		.gallery__count {
-			justify-self: start;
-		}
 	}
 
 	@media (max-width: 599px) {
@@ -383,8 +510,9 @@ const altFor = (client: string, category: string) =>
 			grid-template-columns: 1fr;
 		}
 
-		.gallery-item img {
-			aspect-ratio: 16 / 10;
+		.gallery-head__bar {
+			flex-direction: column;
+			align-items: flex-start;
 		}
 
 		.lightbox {
@@ -399,31 +527,75 @@ const altFor = (client: string, category: string) =>
 </style>
 
 <script>
-	// Lightbox for the portfolio gallery. Pure vanilla — every tile is a
-	// button with the photo path and client name in its data attributes.
-	const tiles = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-gallery-item]'));
+	// Category filter + lightbox. Pure vanilla — every card is a button with
+	// the photo path, client, event and date in its data attributes. The
+	// lightbox steps through the tiles currently visible after filtering.
+	const items = Array.from(document.querySelectorAll<HTMLElement>('.gallery__item'));
+	const filters = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filter]'));
+	const count = document.querySelector<HTMLElement>('[data-gallery-count]');
+	const blurb = document.querySelector<HTMLElement>('[data-gallery-blurb]');
+
+	const visibleTiles = () =>
+		Array.from(
+			document.querySelectorAll<HTMLButtonElement>(
+				'.gallery__item:not(.is-hidden) [data-gallery-item]'
+			)
+		);
+
+	const applyFilter = (category: string, button: HTMLButtonElement) => {
+		for (const pill of filters) {
+			const on = pill === button;
+			pill.classList.toggle('is-active', on);
+			pill.setAttribute('aria-pressed', String(on));
+		}
+		let visible = 0;
+		for (const li of items) {
+			const show = category === 'all' || li.dataset.category === category;
+			li.classList.toggle('is-hidden', !show);
+			if (show) visible++;
+		}
+		if (count) count.textContent = `${visible} ${visible === 1 ? 'build' : 'builds'}`;
+		if (blurb && button.dataset.blurb) blurb.textContent = button.dataset.blurb;
+		// soft re-entrance on the cards that just appeared
+		for (const li of items) {
+			if (li.classList.contains('is-hidden')) continue;
+			li.classList.remove('is-enter');
+			void li.offsetWidth;
+			li.classList.add('is-enter');
+		}
+	};
+
+	for (const button of filters) {
+		button.addEventListener('click', () => applyFilter(button.dataset.filter ?? 'all', button));
+	}
+
+	/* ------------------------------------------------------------- lightbox */
 	const lightbox = document.querySelector<HTMLElement>('[data-lightbox]');
 	const lbImg = lightbox?.querySelector<HTMLImageElement>('[data-lightbox-img]');
 	const lbClient = lightbox?.querySelector<HTMLElement>('[data-lightbox-client]');
+	const lbSub = lightbox?.querySelector<HTMLElement>('[data-lightbox-sub]');
 	const lbCount = lightbox?.querySelector<HTMLElement>('[data-lightbox-count]');
 	const lbClose = lightbox?.querySelector<HTMLButtonElement>('[data-lightbox-close]');
 	const lbPrev = lightbox?.querySelector<HTMLButtonElement>('[data-lightbox-prev]');
 	const lbNext = lightbox?.querySelector<HTMLButtonElement>('[data-lightbox-next]');
 
-	if (lightbox && lbImg && lbClient && lbCount && tiles.length > 0) {
+	if (lightbox && lbImg && lbClient && lbSub && lbCount) {
+		let tiles: HTMLButtonElement[] = [];
 		let index = 0;
 		let lastFocus: HTMLElement | null = null;
 
 		const render = () => {
 			const tile = tiles[index];
 			lbImg.src = tile.dataset.src ?? '';
-			lbImg.alt = tile.dataset.caption ?? '';
-			lbClient.textContent = tile.dataset.caption ?? '';
+			lbImg.alt = tile.dataset.client ?? '';
+			lbClient.textContent = tile.dataset.client ?? '';
+			lbSub.textContent = `${tile.dataset.event ?? ''} · ${tile.dataset.date ?? ''}`;
 			lbCount.textContent = `${index + 1} / ${tiles.length}`;
 		};
 
-		const open = (i: number) => {
-			index = (i + tiles.length) % tiles.length;
+		const open = (tile: HTMLButtonElement) => {
+			tiles = visibleTiles();
+			index = Math.max(0, tiles.indexOf(tile));
 			lastFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
 			render();
 			lightbox.classList.add('is-open');
@@ -442,7 +614,9 @@ const altFor = (client: string, category: string) =>
 			render();
 		};
 
-		tiles.forEach((tile, i) => tile.addEventListener('click', () => open(i)));
+		for (const tile of visibleTiles()) {
+			tile.addEventListener('click', () => open(tile));
+		}
 		lbClose?.addEventListener('click', close);
 		lbPrev?.addEventListener('click', () => step(-1));
 		lbNext?.addEventListener('click', () => step(1));
