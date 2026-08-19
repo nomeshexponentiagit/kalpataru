@@ -1,0 +1,3 @@
+# Kalpataru Exhibition — site root defaults (safe to merge with Hostinger's).
+Options -Indexes
+DirectoryIndex index.php index.html

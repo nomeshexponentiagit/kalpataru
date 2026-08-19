@@ -67,10 +67,27 @@ import { MARKETS, SITE } from '../data/site';
 				</ul>
 			</div>
 
-			<!-- Static-site enquiry form: on submit it opens the visitor's email app
-			     with the message pre-filled (no backend on this site). Swap in a real
-			     form handler once one exists. -->
-			<form class="enquiry" data-enquiry data-reveal novalidate>
+			<!-- Enquiry form → POSTs to /api/contact.php (PHP backend). Works with
+			     JS (fetch + inline status) and without it (plain form POST). -->
+			<form
+				class="enquiry"
+				data-enquiry
+				data-reveal
+				novalidate
+				action="/api/contact.php"
+				method="post"
+			>
+				<!-- honeypot: invisible to humans, bots fill it and get dropped -->
+				<input
+					class="enquiry__hp"
+					type="text"
+					name="website"
+					tabindex="-1"
+					autocomplete="off"
+					aria-hidden="true"
+				/>
+				<input type="hidden" name="page" value={Astro.url.pathname} />
+				<input type="hidden" name="form_ms" value="0" />
 				<div class="enquiry__row">
 					<label class="enquiry__field">
 						<span>Name *</span>
@@ -100,8 +117,9 @@ import { MARKETS, SITE } from '../data/site';
 					<textarea name="message" rows="5" required placeholder="Tell us about your stall, size, city, budget…"></textarea>
 				</label>
 				<button class="btn btn--solid enquiry__submit" type="submit">Send enquiry</button>
+				<p class="enquiry__status" role="status" aria-live="polite" hidden></p>
 				<p class="enquiry__note">
-					This opens your email app with the message ready to send. Or write to us directly at
+					We usually reply within two working days. Prefer email? Write to us directly at
 					<a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
 				</p>
 			</form>
@@ -265,6 +283,39 @@ import { MARKETS, SITE } from '../data/site';
 		margin-top: 0.4rem;
 	}
 
+	/* honeypot: kept in the DOM for bots, invisible to humans */
+	.enquiry__hp {
+		position: absolute !important;
+		left: -9999px !important;
+		width: 1px;
+		height: 1px;
+		opacity: 0;
+	}
+
+	.enquiry__status {
+		font-size: 0.88rem;
+		font-weight: 600;
+		line-height: 1.6;
+		padding: 0.7rem 1rem;
+		border: 1px solid var(--line-strong);
+	}
+
+	.enquiry__status.is-ok {
+		color: #2e7d4f;
+		border-color: rgba(46, 125, 79, 0.4);
+		background: rgba(46, 125, 79, 0.07);
+	}
+
+	.enquiry__status.is-error {
+		color: #b3372e;
+		border-color: rgba(179, 55, 46, 0.4);
+		background: rgba(179, 55, 46, 0.06);
+	}
+
+	.enquiry__status.is-sending {
+		color: var(--ink-dim);
+	}
+
 	.enquiry__note {
 		font-size: 0.78rem;
 		line-height: 1.6;
@@ -297,26 +348,76 @@ import { MARKETS, SITE } from '../data/site';
 	}
 </style>
 
-<script define:vars={{ email: SITE.email }}>
-	// Mailto fallback for the static form: builds the email locally and opens
-	// the visitor's mail client addressed to the company. Replace with a real
-	// backend handler when one exists.
+<script>
+	// Submits the form to the PHP backend (/api/contact.php) as JSON and shows
+	// the result inline. Without JavaScript the form still works as a normal
+	// POST — the backend then redirects back with ?sent=1 / ?sent=error.
 	const form = document.querySelector('[data-enquiry]');
-	form?.addEventListener('submit', (event) => {
-		event.preventDefault();
-		const fd = new FormData(form);
-		const pick = (key) => String(fd.get(key) ?? '').trim();
-		const lines = [
-			`Name: ${pick('name')}`,
-			`Company: ${pick('company') || '—'}`,
-			`Email: ${pick('email')}`,
-			`Phone: ${pick('phone') || '—'}`,
-			`Event: ${pick('event') || '—'}`,
-			'',
-			pick('message'),
-		];
-		window.location.href = `mailto:${email}?subject=${encodeURIComponent(
-			'Exhibition enquiry — ' + (pick('company') || pick('name'))
-		)}&body=${encodeURIComponent(lines.join('\n'))}`;
-	});
+	if (form) {
+		const status = form.querySelector('.enquiry__status');
+		const submit = form.querySelector('.enquiry__submit');
+		const msInput = form.querySelector('[name="form_ms"]');
+		const loadedAt = Date.now();
+
+		const showStatus = (text, kind) => {
+			status.textContent = text;
+			status.className = 'enquiry__status ' + kind;
+			status.hidden = false;
+			status.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+		};
+
+		form.addEventListener('submit', async (event) => {
+			event.preventDefault();
+			if (!form.reportValidity()) return;
+
+			// anti-spam minimum-time signal for the backend
+			msInput.value = String(Date.now() - loadedAt);
+
+			const fd = new FormData(form);
+			const payload = {
+				name: String(fd.get('name') ?? '').trim(),
+				email: String(fd.get('email') ?? '').trim(),
+				phone: String(fd.get('phone') ?? '').trim(),
+				company: String(fd.get('company') ?? '').trim(),
+				event: String(fd.get('event') ?? '').trim(),
+				message: String(fd.get('message') ?? '').trim(),
+				page: String(fd.get('page') ?? ''),
+				website: String(fd.get('website') ?? ''),
+				form_ms: Number(msInput.value),
+			};
+
+			submit.disabled = true;
+			showStatus('Sending…', 'is-sending');
+
+			try {
+				const res = await fetch('/api/contact.php', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(payload),
+				});
+				const data = await res.json();
+				if (res.ok && data.ok) {
+					showStatus(
+						'Thanks — your enquiry is on its way. We usually reply within two working days.',
+						'is-ok'
+					);
+					form.reset();
+				} else {
+					showStatus(data.error || 'Something went wrong — please try again or call us.', 'is-error');
+				}
+			} catch {
+				showStatus('Could not send — please check your connection or call us directly.', 'is-error');
+			} finally {
+				submit.disabled = false;
+			}
+		});
+
+		// no-JS fallback: the backend redirects back here with the result
+		const params = new URLSearchParams(window.location.search);
+		if (params.get('sent') === '1') {
+			showStatus('Thanks — your enquiry is on its way. We usually reply within two working days.', 'is-ok');
+		} else if (params.get('sent') === 'error') {
+			showStatus('Something went wrong — please try again or call us.', 'is-error');
+		}
+	}
 </script>
