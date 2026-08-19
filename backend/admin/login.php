@@ -32,8 +32,13 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
 <body>
 	<div class="login-wrap">
 		<form class="login-card" method="post" action="/admin/login.php">
-			<h1>Kalpataru<span>.</span></h1>
-			<p class="muted" style="margin-bottom:1.4rem">Website control panel — staff only.</p>
+			<div class="login-brand">
+				<span class="login-logo">K</span>
+				<div>
+					<h1>Kalpataru</h1>
+					<p class="login-sub">Website control panel — staff only</p>
+				</div>
+			</div>
 
 			<?php if ($error !== ''): ?>
 				<div class="alert alert--bad"><?= e($error) ?></div>
@@ -49,7 +54,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
 			</div>
 
 			<input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>" />
-			<button class="btn" type="submit" style="width:100%;justify-content:center">Log in</button>
+			<button class="btn btn--primary btn--block" type="submit">Log in</button>
+
+			<p class="login-foot"><a href="/">&larr; Back to the website</a></p>
 		</form>
 	</div>
 </body>
