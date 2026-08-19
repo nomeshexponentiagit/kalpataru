@@ -60,7 +60,7 @@ function leads_page(array $f, int $page, int $perPage = 20): array
 	return $stmt->fetchAll();
 }
 
-/** Counts per status (for the dashboard cards). */
+/** Counts per status (for the dashboard cards), plus 7-day deltas for the "+N" badges. */
 function leads_stats(): array
 {
 	$rows = db()->query(
@@ -71,7 +71,37 @@ function leads_stats(): array
 		if (isset($out[$r['status']])) $out[$r['status']] = (int) $r['n'];
 	}
 	$out['total'] = array_sum($out);
+
+	// how many arrived in the last 7 days (for the green "+N" badges)
+	foreach (['new', 'contacted', 'closed', 'spam', 'total'] as $k) {
+		$out[$k . '_7d'] = 0;
+	}
+	$rows7 = db()->query(
+		'SELECT status, COUNT(*) AS n FROM leads WHERE created_at > (NOW() - INTERVAL 7 DAY) GROUP BY status'
+	)->fetchAll();
+	foreach ($rows7 as $r) {
+		if (isset($out[$r['status'] . '_7d'])) $out[$r['status'] . '_7d'] = (int) $r['n'];
+	}
+	$out['total_7d'] = $out['new_7d'] + $out['contacted_7d'] + $out['closed_7d'] + $out['spam_7d'];
 	return $out;
+}
+
+/** Manually add a lead (walk-in / phone enquiry) — always starts as new. */
+function lead_add(array $lead): int
+{
+	db()->prepare(
+		'INSERT INTO leads (name, email, phone, company, message, page, ip_hash)
+		 VALUES (?, ?, ?, ?, ?, ?, ?)'
+	)->execute([
+		clean_input($lead['name'] ?? '', 120),
+		clean_input($lead['email'] ?? '', 190),
+		clean_input($lead['phone'] ?? '', 40),
+		clean_input($lead['company'] ?? '', 160),
+		clean_input($lead['message'] ?? '', 5000),
+		'manual',
+		ip_hash(),
+	]);
+	return (int) db()->lastInsertId();
 }
 
 /** All leads matching the filters (for CSV export). */

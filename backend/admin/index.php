@@ -29,6 +29,22 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
 		} elseif ($action === 'delete') {
 			lead_delete($id);
 			flash_set('ok', 'Lead #' . $id . ' deleted.');
+		} elseif ($action === 'add') {
+			$name    = clean_input($_POST['name'] ?? '', 120);
+			$email   = clean_input($_POST['email'] ?? '', 190);
+			$message = clean_input($_POST['message'] ?? '', 5000);
+			if ($name === '' || !valid_email($email) || mb_strlen($message) < 10) {
+				flash_set('bad', 'Add lead needs a name, a valid email and a message of at least 10 characters.');
+			} else {
+				$newId = lead_add([
+					'name'    => $name,
+					'email'   => $email,
+					'phone'   => $_POST['phone'] ?? '',
+					'company' => $_POST['company'] ?? '',
+					'message' => $message,
+				]);
+				flash_set('ok', 'Lead #' . $newId . ' added.');
+			}
 		}
 	} catch (Throwable $e) {
 		error_log('[admin] ' . $e->getMessage());
@@ -76,10 +92,49 @@ require __DIR__ . '/_partials/header.php';
 			<input type="search" name="q" value="<?= e($filters['q']) ?>" placeholder="Search enquiries" aria-label="Search enquiries" />
 			<input type="hidden" name="status" value="<?= e($filters['status']) ?>" />
 		</form>
-		<a class="btn btn--primary" href="/admin/export.php?status=<?= e(rawurlencode($filters['status'])) ?>&amp;q=<?= e(rawurlencode($filters['q'])) ?>">
+		<a class="btn btn--ghost" href="/admin/export.php?status=<?= e(rawurlencode($filters['status'])) ?>&amp;q=<?= e(rawurlencode($filters['q'])) ?>">
 			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
 			Export CSV
 		</a>
+		<details class="addlead">
+			<summary>
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+				Add lead
+			</summary>
+			<form class="addlead__form" method="post" action="/admin/">
+				<h3>Add a lead manually</h3>
+				<p class="addlead__hint">For walk-ins and phone enquiries that never came through the website form.</p>
+				<div class="addlead__row">
+					<div class="field">
+						<label for="add-name">Name *</label>
+						<input class="input" id="add-name" name="name" type="text" required />
+					</div>
+					<div class="field">
+						<label for="add-email">Email *</label>
+						<input class="input" id="add-email" name="email" type="email" required />
+					</div>
+				</div>
+				<div class="addlead__row">
+					<div class="field">
+						<label for="add-phone">Phone</label>
+						<input class="input" id="add-phone" name="phone" type="tel" />
+					</div>
+					<div class="field">
+						<label for="add-company">Company</label>
+						<input class="input" id="add-company" name="company" type="text" />
+					</div>
+				</div>
+				<div class="field">
+					<label for="add-message">Message *</label>
+					<textarea class="textarea" id="add-message" name="message" rows="3" required placeholder="Where did they enquire? What do they need?"></textarea>
+				</div>
+				<input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>" />
+				<input type="hidden" name="action" value="add" />
+				<div class="addlead__actions">
+					<button class="btn btn--primary" type="submit">Save lead</button>
+				</div>
+			</form>
+		</details>
 	</div>
 </div>
 
@@ -91,27 +146,27 @@ require __DIR__ . '/_partials/header.php';
 	<div class="cards">
 		<a class="stat" href="/admin/">
 			<div class="stat__head">Total leads<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2" /><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" /></svg></div>
-			<div class="stat__num"><?= (int) $stats['total'] ?></div>
+			<div class="stat__num"><?= (int) $stats['total'] ?><?php if ($stats['total_7d'] > 0): ?><span class="stat__delta" title="Arrived in the last 7 days">+<?= (int) $stats['total_7d'] ?></span><?php endif; ?></div>
 			<div class="stat__foot">All enquiries</div>
 		</a>
 		<div class="stat">
 			<div class="stat__head">New<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4" /></svg></div>
-			<div class="stat__num"><?= (int) $stats['new'] ?></div>
+			<div class="stat__num"><?= (int) $stats['new'] ?><?php if ($stats['new_7d'] > 0): ?><span class="stat__delta" title="Arrived in the last 7 days">+<?= (int) $stats['new_7d'] ?></span><?php endif; ?></div>
 			<div class="stat__foot">Awaiting reply</div>
 		</div>
 		<div class="stat">
 			<div class="stat__head">Contacted<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" /></svg></div>
-			<div class="stat__num"><?= (int) $stats['contacted'] ?></div>
+			<div class="stat__num"><?= (int) $stats['contacted'] ?><?php if ($stats['contacted_7d'] > 0): ?><span class="stat__delta" title="Arrived in the last 7 days">+<?= (int) $stats['contacted_7d'] ?></span><?php endif; ?></div>
 			<div class="stat__foot">In conversation</div>
 		</div>
 		<div class="stat">
 			<div class="stat__head">Closed<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg></div>
-			<div class="stat__num"><?= (int) $stats['closed'] ?></div>
+			<div class="stat__num"><?= (int) $stats['closed'] ?><?php if ($stats['closed_7d'] > 0): ?><span class="stat__delta" title="Arrived in the last 7 days">+<?= (int) $stats['closed_7d'] ?></span><?php endif; ?></div>
 			<div class="stat__foot">Won / done</div>
 		</div>
 		<div class="stat">
 			<div class="stat__head">Spam<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><line x1="4.93" y1="4.93" x2="19.07" y2="19.07" /></svg></div>
-			<div class="stat__num"><?= (int) $stats['spam'] ?></div>
+			<div class="stat__num"><?= (int) $stats['spam'] ?><?php if ($stats['spam_7d'] > 0): ?><span class="stat__delta" title="Arrived in the last 7 days">+<?= (int) $stats['spam_7d'] ?></span><?php endif; ?></div>
 			<div class="stat__foot">Filtered out</div>
 		</div>
 	</div>
@@ -158,10 +213,21 @@ require __DIR__ . '/_partials/header.php';
 							<?php foreach ($leads as $l): ?>
 								<tr>
 									<td>
-										<div class="who"><?= e($l['name']) ?></div>
-										<div class="sub"><a href="mailto:<?= e($l['email']) ?>"><?= e($l['email']) ?></a></div>
-										<?php if ($l['phone'] !== ''): ?><div class="sub"><?= e($l['phone']) ?></div><?php endif; ?>
-										<?php if ($l['company'] !== ''): ?><div class="sub"><?= e($l['company']) ?></div><?php endif; ?>
+										<div class="who-row">
+											<?php
+											$initials = '';
+											foreach (array_slice(preg_split('/\s+/', trim((string) $l['name'])), 0, 2) as $w) {
+												$initials .= mb_strtoupper(mb_substr($w, 0, 1));
+											}
+											?>
+											<span class="who-avatar" aria-hidden="true"><?= e($initials !== '' ? $initials : '?') ?></span>
+											<div>
+												<div class="who"><?= e($l['name']) ?></div>
+												<div class="sub"><a href="mailto:<?= e($l['email']) ?>"><?= e($l['email']) ?></a></div>
+												<?php if ($l['phone'] !== ''): ?><div class="sub"><?= e($l['phone']) ?></div><?php endif; ?>
+												<?php if ($l['company'] !== ''): ?><div class="sub"><?= e($l['company']) ?></div><?php endif; ?>
+											</div>
+										</div>
 									</td>
 									<td>
 										<div class="msg" title="<?= e($l['message']) ?>"><?= nl2br(e($l['message'])) ?></div>
