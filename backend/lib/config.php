@@ -37,5 +37,9 @@ defined('RATE_LIMIT_MAX_SUBMISSIONS') || define('RATE_LIMIT_MAX_SUBMISSIONS', 3)
 // Salt for one-way IP hashing (any random string — change it once, keep it secret).
 defined('IP_SALT') || define('IP_SALT', 'kalpataru-salt-CHANGE-ME-to-a-random-string');
 
+// --- blog -------------------------------------------------------------------
+// Where admin cover uploads are stored (public folder, web-served as /blog-images/).
+defined('BLOG_UPLOAD_DIR') || define('BLOG_UPLOAD_DIR', dirname(__DIR__) . '/blog-images');
+
 // --- misc ------------------------------------------------------------------
 defined('SITE_URL') || define('SITE_URL', 'https://kalpataruexhibition.com');

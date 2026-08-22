@@ -39,6 +39,9 @@ export const FOOTER_NAV = [
 	{ label: 'Locations', href: '/#locations' },
 	{ label: 'About', href: '/about' },
 	{ label: 'Contact', href: '/contact' },
+	// Blog is footer-only by request — it is NOT in NAV_LINKS (header).
+	// Served by the PHP backend at /blog/ (see backend/blog/).
+	{ label: 'Blog', href: '/blog/' },
 ] as const;
 
 /* Legal pages live in the footer bottom bar on every page. */

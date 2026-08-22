@@ -26,3 +26,20 @@ CREATE TABLE IF NOT EXISTS form_submissions (
 	PRIMARY KEY (id),
 	KEY idx_ip_time (ip_hash, created_at)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+
+-- Blog posts (admin-managed). body is plain text — blank lines become paragraphs
+-- at render time. cover is the uploaded filename inside blog-images/ ('' = none).
+CREATE TABLE IF NOT EXISTS blog_posts (
+	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	title VARCHAR(190) NOT NULL,
+	slug VARCHAR(190) NOT NULL,
+	excerpt VARCHAR(500) NOT NULL DEFAULT '',
+	body MEDIUMTEXT NOT NULL,
+	cover VARCHAR(255) NOT NULL DEFAULT '',
+	status ENUM('draft', 'published') NOT NULL DEFAULT 'draft',
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (id),
+	UNIQUE KEY idx_slug (slug),
+	KEY idx_status (status)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;

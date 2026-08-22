@@ -1,0 +1,9 @@
+# Pretty blog URLs: /blog/my-post-slug -> post.php?slug=my-post-slug
+# (works on Hostinger Apache; locally php -S uses tools/blog-router.php)
+
+DirectoryIndex index.php
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-z0-9-]+)/?$ post.php?slug=$1 [L,QSA]

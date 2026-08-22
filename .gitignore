@@ -25,3 +25,7 @@ pnpm-debug.log*
 
 # backend: local-only overrides (DB credentials, admin password)
 backend/lib/config.local.php
+
+# backend: uploaded blog cover images (keep the folder via .gitkeep)
+backend/blog-images/*
+!backend/blog-images/.gitkeep
