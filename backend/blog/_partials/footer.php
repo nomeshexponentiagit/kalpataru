@@ -70,7 +70,8 @@
 	</div>
 </footer>
 <script>
-	// header scrolled state + mobile menu (plain JS, no dependencies)
+	// header scrolled state + fullscreen mobile menu (plain JS, no dependencies,
+	// same behaviour as the site's main.ts)
 	(function () {
 		var header = document.querySelector('[data-header]');
 		if (header) {
@@ -80,13 +81,37 @@
 			window.addEventListener('scroll', onScroll, { passive: true });
 			onScroll();
 		}
+
 		var toggle = document.querySelector('[data-menu-toggle]');
 		var menu = document.querySelector('[data-menu]');
 		if (toggle && menu) {
-			toggle.addEventListener('click', function () {
-				var open = menu.classList.toggle('is-open');
+			var links = menu.querySelectorAll('a');
+			var firstLink = links[0];
+
+			var setOpen = function (open) {
 				toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+				toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+				menu.classList.toggle('is-open', open);
+				document.body.classList.toggle('menu-open', open);
+				// the light menu sits under the bar, so the bar's ink must go dark
 				if (header) header.classList.toggle('is-open', open);
+			};
+
+			toggle.addEventListener('click', function () {
+				var open = toggle.getAttribute('aria-expanded') !== 'true';
+				setOpen(open);
+				if (open && firstLink) firstLink.focus();
+			});
+
+			for (var i = 0; i < links.length; i++) {
+				links[i].addEventListener('click', function () { setOpen(false); });
+			}
+
+			document.addEventListener('keydown', function (event) {
+				if (event.key === 'Escape' && menu.classList.contains('is-open')) {
+					setOpen(false);
+					toggle.focus();
+				}
 			});
 		}
 	})();
