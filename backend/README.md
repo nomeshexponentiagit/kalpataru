@@ -87,6 +87,15 @@ Leave `DB_HOST` as `localhost` and everything else as it is.
 3. You should see your test enquiry in the list. Mark it `contacted`, add a note, try **Export CSV** — done. 🎉
 4. Open `https://kalpataruexhibition.com/blog/` — the blog page. In the admin, go to **Blog → New post**, write something, set the status to *Published* and save. Refresh the blog page — your post is there with its own address like `https://kalpataruexhibition.com/blog/my-first-post`.
 
+### Optional — start with the 6 sample articles
+
+The project ships with 6 ready-written blog articles (with cover photos), so the blog is not empty on launch day:
+
+1. Upload the 6 images from `blog/seed-covers/` (cover-1.jpg … cover-6.jpg) into `public_html/blog-images/` — keep the same filenames.
+2. In phpMyAdmin → Import, choose `sql/seed-posts.sql` and press **Go**.
+
+That adds the 6 articles as *Published* — they appear on `/blog/` immediately. Edit or delete them any time from the admin panel (Blog). Only import `seed-posts.sql` on an **empty** `blog_posts` table (it uses fixed ids 1–6 to match the cover filenames).
+
 ---
 
 ## Using the admin panel (day to day)
