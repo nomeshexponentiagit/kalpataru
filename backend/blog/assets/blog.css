@@ -557,9 +557,15 @@ main > * + * {
 	aspect-ratio: 16 / 10;
 	background: linear-gradient(135deg, var(--accent), var(--accent-deep));
 	display: block;
+	position: relative;
+	overflow: hidden;
 }
 
 .post-card__media img {
+	/* absolutely filled so the image can never stretch the 16/10 frame,
+	   whatever shape the uploaded photo is */
+	position: absolute;
+	inset: 0;
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
@@ -588,6 +594,12 @@ main > * + * {
 	line-height: 1.25;
 	color: var(--ink);
 	transition: color 0.3s var(--ease-swift);
+	/* uniform cards: every title block is exactly two lines tall */
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	min-height: 2.5em;
 }
 
 .post-card:hover .post-card__title {
@@ -603,6 +615,8 @@ main > * + * {
 	-webkit-box-orient: vertical;
 	overflow: hidden;
 	margin-top: auto;
+	/* uniform cards: every excerpt block is exactly three lines tall */
+	min-height: 4.95em;
 }
 
 /* ---------------------------------------------------------------- single post */
