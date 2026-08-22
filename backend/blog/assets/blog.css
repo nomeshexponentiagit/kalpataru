@@ -179,6 +179,12 @@
 	padding: 0;
 }
 
+ul,
+ol {
+	list-style: none;
+	padding: 0;
+}
+
 html {
 	scroll-behavior: smooth;
 }
@@ -282,9 +288,7 @@ main > * + * {
 	letter-spacing: 0.22em;
 	text-transform: uppercase;
 	line-height: 1;
-	border-radius: 8px;
 	cursor: pointer;
-	border: 1px solid transparent;
 	text-decoration: none;
 	transition: background-color 0.3s var(--ease-swift), border-color 0.3s var(--ease-swift), color 0.3s var(--ease-swift);
 }
@@ -336,19 +340,27 @@ main > * + * {
 	right: 0;
 	z-index: 60;
 	border-bottom: 1px solid transparent;
-	transition: background-color 0.3s, border-color 0.3s, backdrop-filter 0.3s;
+	transition: background-color 0.4s var(--ease-swift), border-color 0.4s var(--ease-swift);
 	/* light ink while transparent over the dark hero */
 	--ink: #eff6f5;
 	--ink-dim: rgba(239, 246, 245, 0.72);
 	--ink-faint: rgba(239, 246, 245, 0.5);
 }
 
-.site-header.is-scrolled,
-.site-header.is-open {
+/* solid paper appearance once the page is scrolled (same as the site) */
+.site-header.is-scrolled {
 	background: rgba(242, 246, 244, 0.92);
 	backdrop-filter: blur(14px);
 	-webkit-backdrop-filter: blur(14px);
 	border-bottom-color: var(--line);
+	--ink: #10252b;
+	--ink-dim: rgba(16, 37, 43, 0.68);
+	--ink-faint: rgba(16, 37, 43, 0.45);
+}
+
+/* while the light fullscreen menu is open, switch the bar's ink to dark
+   only — no background/blur here, or the blur would trap the fixed menu */
+.site-header.is-open {
 	--ink: #10252b;
 	--ink-dim: rgba(16, 37, 43, 0.68);
 	--ink-faint: rgba(16, 37, 43, 0.45);

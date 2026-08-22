@@ -51,7 +51,8 @@ $blogNav = [
 			<span></span><span></span>
 		</button>
 	</div>
-	<div class="site-menu" id="site-menu" data-menu>
+</header>
+<div class="site-menu" id="site-menu" data-menu>
 		<nav class="site-menu__nav" aria-label="Menu">
 			<ul>
 				<?php $menuI = 0; foreach ($blogNav as [$bl, $bh]): ?>
@@ -67,5 +68,4 @@ $blogNav = [
 			<p class="site-menu__markets">India · Japan · China · USA</p>
 		</div>
 	</div>
-</header>
 <main id="main">
